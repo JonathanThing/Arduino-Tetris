@@ -137,7 +137,7 @@ void loop() {
 
   */
 
-  /* Scanning RGB
+  // /* Scanning RGB
   for (int colour = 0; colour < 3; colour++) {
     for (int rows = 0; rows < 8; rows++) {
       PORTL = 1 << rows;
@@ -148,7 +148,7 @@ void loop() {
       }
     }
   }
-  */
+  // */
 
   /* Solid Colour
   for (int colour = 0; colour < 3; colour++) {
