@@ -137,6 +137,7 @@ void loop() {
 
   */
 
+  /* Scanning RGB
   for (int colour = 0; colour < 3; colour++) {
     for (int rows = 0; rows < 8; rows++) {
       PORTL = 1 << rows;
@@ -145,11 +146,24 @@ void loop() {
         delay(20);
         digitalWrite(RGBpins[colour][col], HIGH);
       }
-      // for (int col = 0; col < 16; col++) {
-
-      // }
     }
   }
+  */
+
+  /* Solid Colour
+  for (int colour = 0; colour < 3; colour++) {
+    for (int rows = 0; rows < 8; rows++) {
+      PORTL = 1 << rows;
+      for (int col = 0; col < 16; col++) {
+        digitalWrite(RGBpins[colour][col], LOW);
+      }
+      delay(1);
+      for (int col = 0; col < 16; col++) {
+        digitalWrite(RGBpins[colour][col], HIGH);
+      }
+    }
+  }
+  */
 
   /* LCD and Piezo
   lcd.clear();

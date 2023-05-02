@@ -1,0 +1,6 @@
+1. RGB Colouring
+2. Review Buttons Controls
+3. Midi to Arduino Converter
+
+4. Footprint and PCB design
+
