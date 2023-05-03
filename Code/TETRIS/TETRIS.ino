@@ -80,64 +80,24 @@ void setup() {
 
 }
 
-int red = 255;
-int green = 0;
-int blue = 255;
+// RGB
+byte red = 0;
+byte green = 8;
+byte blue = 0;
 
-const long time = 3333;
-
+const long timeBetweenFrames = 15000;
+const long timePerRow = timeBetweenFrames/8; 
+const long timePerCycle = timePerRow/15; 
+const long timePerColour = timePerCycle/3; 
+  
 void loop() {
 
-  /*
-
-  long redTime = (red*(time)/255.0);
-
-  //Draw Red
   for (int row = 0; row < 8; row++) {
     PORTL = 1 << row;
-    for (int col = 0; col < 16; col++) {
-      digitalWrite(RGBpins[0][col],LOW);
-    }
-    delayMicroseconds(redTime/8);
-    for (int col = 0; col < 16; col++) {
-      digitalWrite(RGBpins[0][col],HIGH);
-    }
+
   }
-  delayMicroseconds(time-redTime);
 
-  long greenTime = (green*(time)/255.0);
-
-  //Draw Red
-  for (int row = 0; row < 8; row++) {
-    PORTL = 1 << row;
-    for (int col = 0; col < 16; col++) {
-      digitalWrite(RGBpins[1][col],LOW);
-    }
-    delayMicroseconds(greenTime/8);
-    for (int col = 0; col < 16; col++) {
-      digitalWrite(RGBpins[1][col],HIGH);
-    }
-  }
-  delayMicroseconds(time-greenTime);
-
-  long blueTime = (blue*(time)/255.0);
-
-  //Draw Red
-  for (int row = 0; row < 8; row++) {
-    PORTL = 1 << row;
-    for (int col = 0; col < 16; col++) {
-      digitalWrite(RGBpins[2][col],LOW);
-    }
-    delayMicroseconds(blueTime/8);
-    for (int col = 0; col < 16; col++) {
-      digitalWrite(RGBpins[2][col],HIGH);
-    }
-  }
-  delayMicroseconds(time-blueTime);
-
-  */
-
-  // /* Scanning RGB
+  /* Scanning RGB
   for (int colour = 0; colour < 3; colour++) {
     for (int rows = 0; rows < 8; rows++) {
       PORTL = 1 << rows;
@@ -148,7 +108,7 @@ void loop() {
       }
     }
   }
-  // */
+  */
 
   /* Solid Colour
   for (int colour = 0; colour < 3; colour++) {
@@ -166,19 +126,19 @@ void loop() {
   */
 
   /* LCD and Piezo
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("I die now");
-  lcd.setCursor(0, 1);
-  for (int i = 0; i < 4; i++) {
-    if (buzzers[i].isPlaying()) {
-      lcd.print("Y  ");
-    } else {
-      lcd.print("N  ");
-    }
-  }
+  // lcd.clear();
+  // lcd.setCursor(0, 0);
+  // lcd.print("I die now");
+  // lcd.setCursor(0, 1);
+  // for (int i = 0; i < 4; i++) {
+  //   if (buzzers[i].isPlaying()) {
+  //     lcd.print("Y  ");
+  //   } else {
+  //     lcd.print("N  ");
+  //   }
+  // }
 
-  switch(counter/10){
+  switch(counter/100){
     case 0:
       digitalWrite(buzzerFive,LOW);
       buzzers[0].play(NOTE_C4, 1000);
@@ -198,12 +158,13 @@ void loop() {
   }
 
   counter++;
-  if (counter > 40) {
+  if (counter > 400) {
     counter = 0;
+    lcd.clear();
   }
   */
 
-  // delay(100);
+  // delay(50);
 
   // handleInput();
 
@@ -214,25 +175,32 @@ void handleInput() {
   int channelOne = analogRead(inputChannelOne);
   int channelTwo = analogRead(inputChannelTwo);
 
+  lcd.clear();
+
   if (channelOne > 900) {
+    lcd.setCursor(0, 0);
     if (channelOne > 1000) {
-      Serial.println("Right");
+      lcd.print("Right");
+      digitalWrite(buzzerFive, HIGH);
+      delay(100);
+      digitalWrite(buzzerFive, LOW);
     } else {
-      Serial.println("Left");
+      lcd.print("Left");
     }
   }
 
   if (channelTwo > 400) {
+    lcd.setCursor(0, 0);
     if (channelTwo > 1000) {
-      Serial.println("Clockwise");
+      lcd.print("Clockwise");
     } else if (channelTwo > 900) {
-      Serial.println("CounterClockwise");
+      lcd.print("CounterClockwise");
     } else if (channelTwo > 700) {
-      Serial.println("Soft Drop");
+      lcd.print("Soft Drop");
     } else if (channelTwo > 600) {
-      Serial.println("Hard Drop");
+      lcd.print("Hard Drop");
     } else {
-      Serial.println("Hold");
+      lcd.print("Hold");
     }
   }
 }
