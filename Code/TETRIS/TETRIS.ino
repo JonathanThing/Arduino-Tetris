@@ -77,25 +77,35 @@ void setup() {
 
   pinMode(inputChannelOne, INPUT);
   pinMode(inputChannelTwo, INPUT);
-
 }
-
-// RGB
-byte red = 0;
-byte green = 8;
-byte blue = 0;
 
 const long timeBetweenFrames = 15000;
 const long timePerRow = timeBetweenFrames/8; 
-const long timePerCycle = timePerRow/15; 
-const long timePerColour = timePerCycle/3; 
+const long timePerColour = timePerRow/3; 
   
+int rgb[8][3] = {{255,255,255},{255,0,0},{0,255,0},{0,0,255},{255,0,255},{255,25,0},{255,100,0},{0,255,255}};
+
 void loop() {
 
-  for (int row = 0; row < 8; row++) {
-    PORTL = 1 << row;
-
+  for (int z = 0; z < 170; z++) {
+    for (int row = 0; row < 8; row++) {
+      PORTL = 1 << row;
+      for (int colour = 0; colour < 3; colour++) {
+        long time = rgb[row][colour]/255.0*timePerColour;
+        if (time > 0) {
+          for (int i = 0; i < z/10; i++) {
+            digitalWrite(RGBpins[colour][i], LOW);
+          }
+          delayMicroseconds(time);
+          for (int i = 0; i < z/10; i++) {
+            digitalWrite(RGBpins[colour][i], HIGH);
+          }
+        }
+        delayMicroseconds(timePerColour-time);
+      }
+    }
   }
+  
 
   /* Scanning RGB
   for (int colour = 0; colour < 3; colour++) {
