@@ -1,17 +1,19 @@
 #include <Tone.h>
 #include <LiquidCrystal.h>
 
-// Piezo Buzzers (1-4 Passive, 5 Active)
-#define buzzerOne 7 
-#define buzzerTwo 6
-#define buzzerThree 5
-#define buzzerFour 4
-#define buzzerFive 3 
+// Passive Piezo Buzzers 
+#define buzzerOne 6 
+#define buzzerTwo 5
+#define buzzerThree 4
+#define buzzerFour 3
 
 Tone buzzers[4];
 
-// LCD
-LiquidCrystal lcd(8,9,10,11,12,13);
+int sevenSegGround[4] = {7,8,9,10};
+
+#define sevenSegData 11
+#define sevenSegClock 13
+#define sevenSegShift 12
 
 // Button Input
 #define inputChannelOne A1
@@ -42,11 +44,8 @@ int RGBpins[3][16] = {
   {0,1,2,A3,A4,A5,A6,A7,37,36,35,34,33,32,31,30}
 };
 
-// Variables
-int counter = 0;
-
 void setup() {
-  lcd.begin(16,2);
+  Serial.begin(9600);
 
   DDRL = B11111111;
   DDRK = B11111111;
@@ -63,12 +62,20 @@ void setup() {
       digitalWrite(RGBpins[i][j], HIGH);
     }
   }
+
+  for (int i = 0; i < 4; i++) {
+    pinMode(sevenSegGround[i], OUTPUT);
+    digitalWrite(sevenSegGround[i], HIGH);
+  }
+  pinMode(sevenSegData, OUTPUT);  
+  pinMode(sevenSegClock, OUTPUT);
+  pinMode(sevenSegShift, OUTPUT);
+
   // Piezo Buzzers
   pinMode(buzzerOne, OUTPUT);
   pinMode(buzzerTwo, OUTPUT);
   pinMode(buzzerThree, OUTPUT);
   pinMode(buzzerFour, OUTPUT);
-  pinMode(buzzerFive, OUTPUT);
 
   buzzers[0].begin(buzzerOne);
   buzzers[1].begin(buzzerTwo);
@@ -77,6 +84,10 @@ void setup() {
 
   pinMode(inputChannelOne, INPUT);
   pinMode(inputChannelTwo, INPUT);
+
+  for (int i = 0; i < 4; i++) {
+    digitalWrite(sevenSegGround[i], LOW);
+  }
 }
 
 const long timeBetweenFrames = 15000;
@@ -87,130 +98,82 @@ int rgb[8][3] = {{255,255,255},{255,0,0},{0,255,0},{0,0,255},{255,0,255},{255,25
 
 void loop() {
 
-  for (int z = 0; z < 170; z++) {
-    for (int row = 0; row < 8; row++) {
-      PORTL = 1 << row;
-      for (int colour = 0; colour < 3; colour++) {
-        long time = rgb[row][colour]/255.0*timePerColour;
-        if (time > 0) {
-          for (int i = 0; i < z/10; i++) {
-            digitalWrite(RGBpins[colour][i], LOW);
-          }
-          delayMicroseconds(time);
-          for (int i = 0; i < z/10; i++) {
-            digitalWrite(RGBpins[colour][i], HIGH);
-          }
-        }
-        delayMicroseconds(timePerColour-time);
-      }
-    }
-  }
-  
-
-  /* Scanning RGB
-  for (int colour = 0; colour < 3; colour++) {
-    for (int rows = 0; rows < 8; rows++) {
-      PORTL = 1 << rows;
-      for (int col = 0; col < 16; col++) {
-        digitalWrite(RGBpins[colour][col], LOW);
-        delay(20);
-        digitalWrite(RGBpins[colour][col], HIGH);
-      }
-    }
-  }
-  */
-
-  /* Solid Colour
-  for (int colour = 0; colour < 3; colour++) {
-    for (int rows = 0; rows < 8; rows++) {
-      PORTL = 1 << rows;
-      for (int col = 0; col < 16; col++) {
-        digitalWrite(RGBpins[colour][col], LOW);
-      }
-      delay(1);
-      for (int col = 0; col < 16; col++) {
-        digitalWrite(RGBpins[colour][col], HIGH);
-      }
-    }
-  }
-  */
-
-  /* LCD and Piezo
-  // lcd.clear();
-  // lcd.setCursor(0, 0);
-  // lcd.print("I die now");
-  // lcd.setCursor(0, 1);
-  // for (int i = 0; i < 4; i++) {
-  //   if (buzzers[i].isPlaying()) {
-  //     lcd.print("Y  ");
-  //   } else {
-  //     lcd.print("N  ");
+  // for (int z = 0; z < 170; z++) {
+  //   for (int row = 0; row < 8; row++) {
+  //     PORTL = 1 << row;
+  //     for (int colour = 0; colour < 3; colour++) {
+  //       long time = rgb[row][colour]/255.0*timePerColour;
+  //       if (time > 0) {
+  //         for (int i = 0; i < z/10; i++) {
+  //           digitalWrite(RGBpins[colour][i], LOW);
+  //         }
+  //         delayMicroseconds(time);
+  //         for (int i = 0; i < z/10; i++) {
+  //           digitalWrite(RGBpins[colour][i], HIGH);
+  //         }
+  //       }
+  //       delayMicroseconds(timePerColour-time);
+  //     }
   //   }
   // }
 
-  switch(counter/100){
-    case 0:
-      digitalWrite(buzzerFive,LOW);
-      buzzers[0].play(NOTE_C4, 1000);
-      break;
-    case 1:
-      buzzers[1].play(NOTE_D4, 1000);
-      break;
-    case 2:
-      buzzers[2].play(NOTE_E4, 1000);
-      break;
-    case 3:
-      buzzers[3].play(NOTE_F4, 1000);
-      break;
-    case 4:
-      digitalWrite(buzzerFive,HIGH);
-      break;
-  }
 
-  counter++;
-  if (counter > 400) {
-    counter = 0;
-    lcd.clear();
-  }
-  */
+  writeSevenSeg(8, 0);
 
-  // delay(50);
 
-  // handleInput();
+  handleInput();
 
-  //Buttons Input
 }
 
 void handleInput() {
   int channelOne = analogRead(inputChannelOne);
   int channelTwo = analogRead(inputChannelTwo);
 
-  lcd.clear();
+  if (channelOne > 850) {
+    Serial.println(channelOne);
+    if (channelOne > 950) {
 
-  if (channelOne > 900) {
-    lcd.setCursor(0, 0);
-    if (channelOne > 1000) {
-      lcd.print("Right");
-      digitalWrite(buzzerFive, HIGH);
-      delay(100);
-      digitalWrite(buzzerFive, LOW);
     } else {
-      lcd.print("Left");
     }
   }
 
-  if (channelTwo > 400) {
-    lcd.setCursor(0, 0);
+  if (channelTwo > 300) {
+    Serial.println(channelTwo);
     if (channelTwo > 1000) {
-      lcd.print("Clockwise");
+
     } else if (channelTwo > 900) {
-      lcd.print("CounterClockwise");
+
     } else if (channelTwo > 700) {
-      lcd.print("Soft Drop");
+
     } else if (channelTwo > 600) {
-      lcd.print("Hard Drop");
+
     } else {
-      lcd.print("Hold");
+
     }
   }
 }
+
+// 0 1 2 3 4 5 6 7 8 9 I O T S Z J L
+const int SevenSegSymbols[17] = {B1111110,B0110000,B1101101,B1111001,B0110011,B1011011,B1011111,B1110000,B1111111,B1111011,B0000110,B0011101,B0000111,B1011011,B1101101,B0001110,B0111000};
+
+void writeSevenSeg(int value, bool includeDecimal) {
+  for(int i = 0; i < 8; i++) {
+    digitalWrite(sevenSegData, LOW);
+    pulsePin(sevenSegClock);
+  }
+  pulsePin(sevenSegShift);
+
+  digitalWrite(sevenSegData, includeDecimal); 
+  pulsePin(sevenSegClock);
+  for(int i = 0; i < 7; i++) {
+    digitalWrite(sevenSegData, SevenSegSymbols[value] & (1<<i));
+    pulsePin(sevenSegClock);
+  }
+  pulsePin(sevenSegShift);
+}
+
+void pulsePin(int pin) {
+  digitalWrite(pin, HIGH);
+  digitalWrite(pin, LOW);
+}
+
