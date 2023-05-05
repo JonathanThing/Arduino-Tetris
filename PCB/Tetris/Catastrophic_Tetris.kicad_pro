@@ -416,7 +416,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "Tetris.kicad_pro",
+    "filename": "Catastrophic_Tetris.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -434,8 +434,8 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 1.0,
-        "via_diameter": 2.0,
-        "via_drill": 1.0,
+        "via_diameter": 0.6,
+        "via_drill": 0.4,
         "wire_width": 8
       },
       {
@@ -451,8 +451,8 @@
         "pcb_color": "rgb(0, 242, 140)",
         "schematic_color": "rgb(0, 0, 0)",
         "track_width": 1.0,
-        "via_diameter": 2.0,
-        "via_drill": 1.0,
+        "via_diameter": 0.6,
+        "via_drill": 0.4,
         "wire_width": 20
       },
       {
@@ -468,8 +468,8 @@
         "pcb_color": "rgb(255, 7, 0)",
         "schematic_color": "rgb(255, 0, 0)",
         "track_width": 1.0,
-        "via_diameter": 2.0,
-        "via_drill": 1.0,
+        "via_diameter": 0.6,
+        "via_drill": 0.4,
         "wire_width": 20
       }
     ],
