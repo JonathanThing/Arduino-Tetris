@@ -448,7 +448,7 @@
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "Ground",
-        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "pcb_color": "rgb(0, 242, 140)",
         "schematic_color": "rgb(0, 0, 0)",
         "track_width": 1.0,
         "via_diameter": 2.0,
@@ -465,7 +465,7 @@
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "Power",
-        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "pcb_color": "rgb(255, 7, 0)",
         "schematic_color": "rgb(255, 0, 0)",
         "track_width": 1.0,
         "via_diameter": 2.0,
@@ -497,7 +497,7 @@
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "",
+      "netlist": "./",
       "specctra_dsn": "",
       "step": "",
       "vrml": ""
