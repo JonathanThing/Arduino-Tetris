@@ -5267,14 +5267,14 @@
     (property "Datasheet" "" (at 17.145 31.75 0)
       (effects (font (size 1.27 1.27)))
     )
-    (pin "1" (uuid 62d1df4a-c061-4c7f-9fa0-ba64b50fe1e3))
-    (pin "2" (uuid 4ec6db37-a50c-412e-8d9c-5bca0b9c3205))
-    (pin "3" (uuid 975b5f00-4b2d-46df-b6a4-4b2ff5f6f9fc))
-    (pin "4" (uuid 1fc38483-9e82-4e66-99cb-b2915eb63285))
-    (pin "5" (uuid 6f1542db-92fc-4ece-8368-848a0a58ce4c))
-    (pin "6" (uuid bfc61d69-0864-49cc-bbb7-e6ea034146f8))
-    (pin "7" (uuid 72b1fe7d-9289-45b0-b16f-af0c7463d173))
-    (pin "8" (uuid c4d06f60-e72e-440c-a3bd-ccb2cce00628))
+    (pin "1" (uuid d8e3f5df-edac-47fb-b3ae-916d177010a1))
+    (pin "2" (uuid 5c0d267f-f423-4777-a605-39dbfb9041eb))
+    (pin "3" (uuid a25935c8-40eb-4cef-ab00-37e62e8a02fd))
+    (pin "4" (uuid ad11ff3b-498e-475f-aba1-5fa2c54eb304))
+    (pin "5" (uuid 4f97a400-145a-48ad-8794-50adfba253b7))
+    (pin "6" (uuid 8843ae49-8272-428d-8286-393e6e9cdac8))
+    (pin "7" (uuid 358ada0f-910e-45bb-87cb-eea703c66b7f))
+    (pin "8" (uuid 6859f17d-eba6-47c2-82d1-70a3a550cce4))
     (instances
       (project "Tetris"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55"
