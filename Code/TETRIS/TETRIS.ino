@@ -23,7 +23,7 @@ bool inputs[numberOfButtons] = {0,0,0,0,0,0,0};
 
 const byte powerPins[8] = {28,26,24,22,30,32,34,36}; // Col (From user's POV)
 
-const byte redPins[16] = {35,39,43,45,47,49,51,53,A8,A9,A10,A11,A12,A13,A14,52};
+const byte redPins[8] = {A8,A9,A10,A11,A12,A13,A14,52};
 const byte greenPins[16] = {2,3,4,5,6,7,8,9,14,15,16,17,18,19,20,21};
 const byte bluePins[8] = {A0,A1,A2,A3,A4,A5,A6,A7};
 
@@ -91,8 +91,6 @@ void setup() {
   for (int i = 8; i < 16; i++) {
     pinMode(greenPins[i], OUTPUT);
     digitalWrite(greenPins[i], HIGH);
-    pinMode(redPins[i], OUTPUT);
-    digitalWrite(redPins[i], HIGH);
   }
 
   writeShiftRegister(pow(2,8), blueDataPin, blueShiftClockPin, blueStorageClockPin);
@@ -120,8 +118,8 @@ void writeShiftRegister(byte value, byte dataPin, byte shiftClockPin, byte stora
 
 
 void drawRed(int ledStates) {
-  // Non shift register
-  for(int i = 0; i < 16; i++) {
+  writeShiftRegister(ledStates>>7, redDataPin, redShiftClockPin, redStorageClockPin);
+  for(int i = 8; i < 16; i++) {
     if(i == 0) {
       digitalWrite(redPins[15],HIGH);
     } else {
@@ -133,19 +131,11 @@ void drawRed(int ledStates) {
 }
 
 void drawBlue(int ledStates) {
-  digitalWrite(bluePins[7],HIGH);
   for (int i = 0; i < 8; i++) {
-    writeShiftRegister(~(1<<i), blueDataPin, blueShiftClockPin, blueStorageClockPin);
-    delay(100);
+    writeShiftRegister(ledStates>>7, blueDataPin, blueShiftClockPin, blueStorageClockPin);
   }
-  for(int i = 0; i < 8; i++) {
-    if(i == 0) {
-      writeShiftRegister(pow(2,8), blueDataPin, blueShiftClockPin, blueStorageClockPin);
-    } else {
-      digitalWrite(bluePins[i-1],HIGH);
-    }
-    digitalWrite(bluePins[i],LOW);
-    delay(100);
+  for(int i = 8; i < 16; i++) {
+   s // digitalWrite(bluePins[i],~(ledStates & ()));
   }
 
 }
