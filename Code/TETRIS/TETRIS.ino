@@ -119,7 +119,8 @@ void writeShiftRegister(byte value, byte dataPin, byte shiftClockPin, byte stora
 }
 
 
-void drawRed() {
+void drawRed(int ledStates) {
+  // Non shift register
   for(int i = 0; i < 16; i++) {
     if(i == 0) {
       digitalWrite(redPins[15],HIGH);
@@ -131,7 +132,7 @@ void drawRed() {
   }
 }
 
-void drawBlue() {
+void drawBlue(int ledStates) {
   digitalWrite(bluePins[7],HIGH);
   for (int i = 0; i < 8; i++) {
     writeShiftRegister(~(1<<i), blueDataPin, blueShiftClockPin, blueStorageClockPin);
@@ -149,15 +150,9 @@ void drawBlue() {
 
 }
 
-void drawGreen() {
+void drawGreen(int ledStates) {
   for(int i = 0; i < 16; i++) {
-    if(i == 0) {
-      digitalWrite(greenPins[15],HIGH);
-    } else {
-      digitalWrite(greenPins[i-1],HIGH);
-    }
-    digitalWrite(greenPins[i],LOW);
-    delay(100);
+    digitalWrite(greenPin[i], ~(ledStates & 1<<i));
   }
 }
 
