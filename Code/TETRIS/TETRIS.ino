@@ -1,19 +1,23 @@
 #include <Tone.h>
+#include <SPI.h>
+
+#define writeHigh(port, bit) (port) |= (1<<(bit))
+#define writeLow(port, bit) (port) &= ~(1<<bit))
 
 const byte numberOfBuzzers = 4;
 const byte numberOfButtons = 7;
 
 // Piezo Buzzers
-const byte buzzerPins[numberOfBuzzers] = {13,12,11,10};
+const byte buzzerPins[numberOfBuzzers] = { 13, 12, 11, 10 };
 Tone buzzers[numberOfBuzzers];
 
 // Buttons
-const byte buttonPins[numberOfButtons] = {23,27,31,41,33,37,25};
-bool inputs[numberOfButtons] = {0,0,0,0,0,0,0};
+const byte buttonPins[numberOfButtons] = { 23, 27, 31, 41, 33, 37, 25 };
+bool inputs[numberOfButtons] = { 0, 0, 0, 0, 0, 0, 0 };
 
-// RGB Matrix 
-// Power    34,32,30,28,36,38,40,42    
-// Red 1    A8,A9,A10,A11,A12,A13,A14,52  
+// RGB Matrix
+// Power    34,32,30,28,36,38,40,42
+// Red 1    A8,A9,A10,A11,A12,A13,A14,52
 // Green 1  21,20,19,18,17,16,15,14
 // Blue 1   A0,A1,A2,A3,A4,A5,A6,A7
 // Red 2 & Blue 2   Shift Register
@@ -21,19 +25,19 @@ bool inputs[numberOfButtons] = {0,0,0,0,0,0,0};
 
 // Temporary RED 53,35,39,43,45,47,49,51
 
-const byte powerPins[8] = {28,26,24,22,30,32,34,36}; // Col (From user's POV)
+const byte powerPins[8] = { 30, 28, 26, 24, 32, 34, 36, 38 };  // Col (From user's POV)
 
-const byte redPins[8] = {A8,A9,A10,A11,A12,A13,A14,52};
-const byte greenPins[16] = {2,3,4,5,6,7,8,9,14,15,16,17,18,19,20,21};
-const byte bluePins[8] = {A0,A1,A2,A3,A4,A5,A6,A7};
+const byte redPins[8] = { A8, A9, A10, A11, A12, A13, A14, 52 };
+const byte greenPins[16] = { 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 16, 17, 18, 19, 20, 21 };
+const byte bluePins[8] = { A0, A1, A2, A3, A4, A5, A6, A7 };
 
 #define blueDataPin 44
 #define blueShiftClockPin 42
 #define blueStorageClockPin 40
 
 #define redDataPin 50
-#define redShiftClockPin 46
-#define redStorageClockPin 48
+#define redShiftClockPin 48
+#define redStorageClockPin 46
 
 struct Colour {
   byte red;
@@ -41,30 +45,35 @@ struct Colour {
   byte blue;
 };
 
-const Colour RED =  {255,0,0};
-const Colour GREEN = {255,0,0};
-const Colour BLUE = {0,0,255};
-const Colour WHITE = {255,255,255};
-const Colour PURPLE = {255,0,255};
-const Colour YELLOW = {255,100,0};
-const Colour ORANGE = {255,25,0};
-const Colour CYAN = {0,255,255};
+const Colour RED = { 8, 0, 0 };
+const Colour GREEN = { 8, 0, 0 };
+const Colour BLUE = { 0, 0, 8 };
+const Colour WHITE = { 8, 8, 8 };
+const Colour PURPLE = { 8, 0, 8 };
+const Colour YELLOW = { 8, 3, 0 };
+const Colour ORANGE = { 8, 1, 0 };
+const Colour CYAN = { 0, 8, 8 };
 
-//Col, Row 
-Colour display [8][16];
+//Col, Row
+Colour display[8][16];
+
+const int timePerFrame = 15000;
+const int timePerColour = timePerFrame / 3;
+const int timePerRow = timePerColour / 8;
+const int timePerResolution = timePerRow / 8;
 
 void setup() {
   Serial.begin(9600);
   randomSeed(analogRead(A15));
 
   // Buttons
-  for (int i = 0; i < 7; i++) {
-    pinMode(buttonPins[i],INPUT);
+  for (int i = 0; i < numberOfButtons; i++) {
+    pinMode(buttonPins[i], INPUT);
   }
 
   // Piezo Buzzers
-  for (int i = 0; i < 4; i++) {
-    pinMode(buzzerPins[i],OUTPUT);
+  for (int i = 0; i < numberOfBuzzers; i++) {
+    pinMode(buzzerPins[i], OUTPUT);
     buzzers[i].begin(buzzerPins[i]);
   }
 
@@ -93,56 +102,81 @@ void setup() {
     digitalWrite(greenPins[i], HIGH);
   }
 
-  writeShiftRegister(pow(2,8), blueDataPin, blueShiftClockPin, blueStorageClockPin);
-
+  writeShiftRegister(0, redDataPin, redShiftClockPin, redStorageClockPin);
+  writeShiftRegister(0, blueDataPin, blueShiftClockPin, blueStorageClockPin);
 }
 
+
 void loop() {
+  // long start = micros();
+  //2,3,4,5,6,7,8,9,14,15,16,17,18,19,20,21
+  // for (int i = 0; i< 16; i++) {
+  //   overhead();
+  // }
+  // Serial.println(micros()-start);
+  delay(500);
+  // drawGraphics();
+}
+
+void drawGraphics() {
   for (int i = 0; i < 8; i++) {
-    digitalWrite(powerPins[i],HIGH);
-    drawRed();
+    if (i == 0) {
+      digitalWrite(powerPins[7], LOW);
+    } else {
+      digitalWrite(powerPins[i - 1], LOW);
+    }
+    digitalWrite(powerPins[i], HIGH);
+    drawGreen(i * 8);
+    // drawGreen(i);
+    // drawBlue(i);
   }
 }
 
 void writeShiftRegister(byte value, byte dataPin, byte shiftClockPin, byte storageClockPin) {
-  digitalWrite(storageClockPin, LOW);
-  digitalWrite(shiftClockPin, LOW);  
-  for (int i = 7; i >= 0; i--) {
-    digitalWrite(dataPin, value & (1<<i));  
-    digitalWrite(shiftClockPin, HIGH);  
+  // digitalWrite(storageClockPin, LOW);
+  // digitalWrite(shiftClockPin, LOW);
+  Serial.println(value, BIN);
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(dataPin, !(value & 1 << (7 - i)));
+    digitalWrite(shiftClockPin, HIGH);
     digitalWrite(shiftClockPin, LOW);
   }
   digitalWrite(storageClockPin, HIGH);
   digitalWrite(storageClockPin, LOW);
 }
 
+// void drawGreen(long value) {
+//   long timeValue = (value*timePerRow/56.0);
+//   if (timeValue != 0) {
+//     for (int j = 0; j < 16; j++) {
+//       digitalWrite(greenPins[j], LOW);
+//     }
+//   }
+//   delayMicroseconds(timeValue);
+//     for (int j = 0; j < 16; j++) {
+//     digitalWrite(greenPins[j], HIGH);
+//   }
+//   delayMicroseconds(timePerRow-timeValue);
+// }
+
 
 void drawRed(int ledStates) {
-  writeShiftRegister(ledStates>>7, redDataPin, redShiftClockPin, redStorageClockPin);
-  for(int i = 8; i < 16; i++) {
-    if(i == 0) {
-      digitalWrite(redPins[15],HIGH);
-    } else {
-      digitalWrite(redPins[i-1],HIGH);
-    }
-    digitalWrite(redPins[i],LOW);
-    delay(100);
-  }
-}
-
-void drawBlue(int ledStates) {
+  writeShiftRegister(ledStates, redDataPin, redShiftClockPin, redStorageClockPin);
   for (int i = 0; i < 8; i++) {
-    writeShiftRegister(ledStates>>7, blueDataPin, blueShiftClockPin, blueStorageClockPin);
+    digitalWrite(redPins[i], !(ledStates & 1 << (i + 8)));
   }
-  for(int i = 8; i < 16; i++) {
-   s // digitalWrite(bluePins[i],~(ledStates & ()));
-  }
-
 }
+
+// void drawBlue(int ledStates) {
+//   writeShiftRegister(ledStates, blueDataPin, blueShiftClockPin, blueStorageClockPin);
+//   for (int i = 0; i < 8; i++) {
+//     digitalWrite(bluePins[i],!(ledStates & 1<<(i+8)));
+//   }
+// }
 
 void drawGreen(int ledStates) {
-  for(int i = 0; i < 16; i++) {
-    digitalWrite(greenPin[i], ~(ledStates & 1<<i));
+  for (int i = 0; i < 16; i++) {
+    digitalWrite(greenPins[i], !(ledStates & (1 << i)));
   }
 }
 
@@ -152,52 +186,52 @@ void handleInput() {
   }
 }
 
-  // long redTime = (red*(time)/255.0);
+// long redTime = (red*(time)/255.0);
 
-  // //Draw Red
-  // for (int row = 0; row < 8; row++) {
-  //   PORTL = 1 << row;
-  //   for (int col = 0; col < 16; col++) {
-  //     digitalWrite(RGBpins[0][col],LOW);
-  //   }
-  //   delayMicroseconds(redTime/8);
-  //   for (int col = 0; col < 16; col++) {
-  //     digitalWrite(RGBpins[0][col],HIGH);
-  //   }
-  // }
-  // delayMicroseconds(time-redTime);
+// //Draw Red
+// for (int row = 0; row < 8; row++) {
+//   PORTL = 1 << row;
+//   for (int col = 0; col < 16; col++) {
+//     digitalWrite(RGBpins[0][col],LOW);
+//   }
+//   delayMicroseconds(redTime/8);
+//   for (int col = 0; col < 16; col++) {
+//     digitalWrite(RGBpins[0][col],HIGH);
+//   }
+// }
+// delayMicroseconds(time-redTime);
 
-  // long greenTime = (green*(time)/255.0);
+// long greenTime = (green*(time)/255.0);
 
-  // //Draw Red
-  // for (int row = 0; row < 8; row++) {
-  //   PORTL = 1 << row;
-  //   for (int col = 0; col < 16; col++) {
-  //     digitalWrite(RGBpins[1][col],LOW);
-  //   }
-  //   delayMicroseconds(greenTime/8);
-  //   for (int col = 0; col < 16; col++) {
-  //     digitalWrite(RGBpins[1][col],HIGH);
-  //   }
-  // }
-  // delayMicroseconds(time-greenTime);
+// //Draw Red
+// for (int row = 0; row < 8; row++) {
+//   PORTL = 1 << row;
+//   for (int col = 0; col < 16; col++) {
+//     digitalWrite(RGBpins[1][col],LOW);
+//   }
+//   delayMicroseconds(greenTime/8);
+//   for (int col = 0; col < 16; col++) {
+//     digitalWrite(RGBpins[1][col],HIGH);
+//   }
+// }
+// delayMicroseconds(time-greenTime);
 
-  // long blueTime = (blue*(time)/255.0);
+// long blueTime = (blue*(time)/255.0);
 
-  // //Draw Red
-  // for (int row = 0; row < 8; row++) {
-  //   PORTL = 1 << row;
-  //   for (int col = 0; col < 16; col++) {
-  //     digitalWrite(RGBpins[2][col],LOW);
-  //   }
-  //   delayMicroseconds(blueTime/8);
-  //   for (int col = 0; col < 16; col++) {
-  //     digitalWrite(RGBpins[2][col],HIGH);
-  //   }
-  // }
-  // delayMicroseconds(time-blueTime);
+// //Draw Red
+// for (int row = 0; row < 8; row++) {
+//   PORTL = 1 << row;
+//   for (int col = 0; col < 16; col++) {
+//     digitalWrite(RGBpins[2][col],LOW);
+//   }
+//   delayMicroseconds(blueTime/8);
+//   for (int col = 0; col < 16; col++) {
+//     digitalWrite(RGBpins[2][col],HIGH);
+//   }
+// }
+// delayMicroseconds(time-blueTime);
 
-  /*  Changing screen 
+/*  Changing screen 
   for (int colour = 0; colour < 300; colour++) {
     for (int rows = 0; rows < 8; rows++) {
       PORTL = 1 << rows;
@@ -212,7 +246,7 @@ void handleInput() {
   }
   */
 
-  /* LCD and Piezo
+/* LCD and Piezo
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("I die now");
@@ -250,8 +284,7 @@ void handleInput() {
   }
   */
 
-  // delay(100);
-  // handleInput();
+// delay(100);
+// handleInput();
 
-  //Buttons Input
-
+//Buttons Input
