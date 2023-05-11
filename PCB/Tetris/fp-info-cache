@@ -1,4 +1,4 @@
-21673867556856558
+21675551245590055
 Arduino_MountingHole
 MountingHole_1.2mm
 Mounting Hole 2.1mm, no annular
@@ -81094,6 +81094,13 @@ THT DIP DIL PDIP 2.54mm 15.24mm 600mil LongPads
 0
 32
 32
+RGBMatrix
+R_Axial_DIN0207_L6.3mm_D2.5mm_P12.40mm_Horizontal
+Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf
+Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm
+0
+2
+2
 Relay_SMD
 Relay_2P2T_10x6mm_TE_IMxxG
 Signal Relay, 10x6mm, 2 Form C, Gull Wings, https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7F108-98001%7FZ.1%7Fpdf%7FEnglish%7FENG_DS_108-98001_Z.1.pdf
