@@ -2,13 +2,6 @@
 
 #define MAX_INT 65535
 
-/*
-TODO:
-1. OOP colour class?
-
-*/
-
-
 const byte numberOfBuzzers = 4;
 const byte numberOfButtons = 7;
 
@@ -104,19 +97,17 @@ void setup() {
   digitalWrite(shiftClockPin, LOW);
   writeShiftRegister(0);
 
-  
+  // for (int i = 0; i < 8; i++) {
+  //   for (int j = 0; j < 16; j++) {
+  //     int thing = random(0,8);
+  //     Serial.print(thing);
+  //     Serial.print(" ");
+  //     display[i][j] = colours[thing];
+  //   }
+  //   Serial.println();
+  // }
 
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 16; j++) {
-      int thing = random(0,8);
-      Serial.print(thing);
-      Serial.print(" ");
-      display[i][j] = colours[thing];
-    }
-    Serial.println();
-  }
-
-  // anchorTime = millis();
+  anchorTime = millis();
 }
 
 int redTime = 0;
@@ -124,34 +115,16 @@ int blueTime = 0;
 int greenTime = 0;
 
 void loop() {
-
-  // deltaTime = millis() - anchorTime;
+  deltaTime = millis() - anchorTime;
 
   for (int i = 0; i < 8; i++) {
-    // Red
     displayRed();
     displayGreen();
     displayBlue();
-
-    // writeRed(0);
-    // delayMicroseconds(redTime);
-    // writeRed(MAX_INT);
-    // delayMicroseconds(timePerRow - redTime);
-
-    // // Green
-    // writeGreen(0);
-    // delayMicroseconds(greenTime);
-    // writeGreen(MAX_INT);
-    // delayMicroseconds(timePerRow - greenTime);
-
-    // // Blue
-    // writeBlue(0);
-    // delayMicroseconds(blueTime);
-    // writeBlue(MAX_INT);
-    // delayMicroseconds(timePerRow - blueTime);
-
     cyclePower();
   }
+
+  delay(2); // About the time delay of game logic (Hopefully)
 }
 
 void displayRed() {
@@ -216,17 +189,11 @@ void writeBlue(int value) {
 }
 
 void cyclePower() {
-  digitalWrite(shiftClockPin, LOW);
-  digitalWrite(storageClockPin, LOW);
-
-  if (currentRow == 0) {
-    digitalWrite(dataPin, HIGH);
-  } else {
-    digitalWrite(dataPin, LOW);
-  }
-
-  digitalWrite(shiftClockPin, HIGH);
-  digitalWrite(storageClockPin, HIGH);
+  writeShiftClockPin(LOW);
+  writeStorageClockPin(LOW);
+  writeDataPin(currentRow != 0);
+  writeShiftClockPin(HIGH);
+  writeStorageClockPin(HIGH);
 
   currentRow++;
   if (currentRow >= 8) {
@@ -245,15 +212,13 @@ byte reverseByte(byte input) {
 }
 
 void writeShiftRegister(byte value) {
-  digitalWrite(storageClockPin, LOW);
-  digitalWrite(shiftClockPin, LOW);
   for (int i = 7; i >= 0; i--) {
-    digitalWrite(dataPin, (value & (1 << i)));
-    digitalWrite(shiftClockPin, HIGH);
-    digitalWrite(shiftClockPin, LOW);
+    writeDataPin(value & (1 << i));
+    writeShiftClockPin(HIGH);
+    writeShiftClockPin(LOW);
   }
-  digitalWrite(storageClockPin, HIGH);
-  digitalWrite(storageClockPin, LOW);
+  writeStorageClockPin(HIGH);
+  writeStorageClockPin(LOW);
 }
 
 void handleInput() {
@@ -263,4 +228,28 @@ void handleInput() {
     Serial.print(" ");
   }
   Serial.println();
+}
+
+void writeDataPin(bool value) {
+  if (value) {
+    PORTG = PORTG | B00000010;
+  } else {
+    PORTG = PORTG & B11111101;
+  }
+}
+
+void writeShiftClockPin(bool value) {
+  if (value) {
+    PORTG = PORTG | B00100000;
+  } else {
+    PORTG = PORTG & B11011111;
+  }
+}
+
+void writeStorageClockPin(bool value) {
+  if (value) {
+    PORTE = PORTE | B00001000;
+  } else {
+    PORTE = PORTE & B11110111;
+  }
 }
