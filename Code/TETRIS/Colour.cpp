@@ -1,5 +1,15 @@
 #include "Colour.h"
 
+static Colour R = Colour(MAX_VALUE, 0, 0);
+static Colour G = Colour(0, MAX_VALUE, 0);
+static Colour B = Colour(0, 0, MAX_VALUE);
+static Colour W = Colour(MAX_VALUE, MAX_VALUE, MAX_VALUE);
+static Colour P = Colour(MAX_VALUE, 0, MAX_VALUE);
+static Colour Y = Colour(MAX_VALUE, MAX_VALUE / 2, 0);
+static Colour O = Colour(MAX_VALUE, MAX_VALUE / 4, 0);
+static Colour C = Colour(0, MAX_VALUE, MAX_VALUE);
+static Colour N = Colour(0, 0, 0);
+
 // Constants
 byte MAX_VALUE = 8;
 

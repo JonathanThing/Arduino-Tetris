@@ -3,16 +3,6 @@
 
 #define MAX_INT 65535
 
-Colour R = Colour(MAX_VALUE, 0, 0);
-Colour G = Colour(0, MAX_VALUE, 0);
-Colour B = Colour(0, 0, MAX_VALUE);
-Colour W = Colour(MAX_VALUE, MAX_VALUE, MAX_VALUE);
-Colour P = Colour(MAX_VALUE, 0, MAX_VALUE);
-Colour Y = Colour(MAX_VALUE, MAX_VALUE / 2, 0);
-Colour O = Colour(MAX_VALUE, MAX_VALUE / 4, 0);
-Colour C = Colour(0, MAX_VALUE, MAX_VALUE);
-Colour N = Colour(0, 0, 0);
-
 const byte numberOfBuzzers = 4;
 const byte numberOfButtons = 7;
 
