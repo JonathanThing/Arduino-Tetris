@@ -1,6 +1,17 @@
 #include <Tone.h>
+#include "Colour.h"
 
 #define MAX_INT 65535
+
+Colour R = Colour(MAX_VALUE, 0, 0);
+Colour G = Colour(0, MAX_VALUE, 0);
+Colour B = Colour(0, 0, MAX_VALUE);
+Colour W = Colour(MAX_VALUE, MAX_VALUE, MAX_VALUE);
+Colour P = Colour(MAX_VALUE, 0, MAX_VALUE);
+Colour Y = Colour(MAX_VALUE, MAX_VALUE / 2, 0);
+Colour O = Colour(MAX_VALUE, MAX_VALUE / 4, 0);
+Colour C = Colour(0, MAX_VALUE, MAX_VALUE);
+Colour N = Colour(0, 0, 0);
 
 const byte numberOfBuzzers = 4;
 const byte numberOfButtons = 7;
@@ -30,13 +41,6 @@ const byte bluePins[8] = { A0, A1, A2, A3, A4, A5, A6, A7 };
 #define shiftClockPin 4
 #define storageClockPin 5
 
-struct Colour {
-  char symbol;
-  byte red;    // 4 bit
-  byte green;  // 4 bit
-  byte blue;   // 4 bit
-};
-
 // const Colour RED = { 'R', 16, 0, 0 };
 // const Colour GREEN = { 'G', 0, 16, 0 };
 // const Colour BLUE = { 'B', 0, 0, 16 };
@@ -47,18 +51,7 @@ struct Colour {
 // const Colour CYAN = { 'C', 0, 16, 16 };
 // const Colour NONE = {'N', 0, 0, 0}
 
-const Colour R = { 'R', 16, 0, 0 };
-const Colour G = { 'G', 0, 16, 0 };
-const Colour B = { 'B', 0, 0, 16 };
-const Colour W = { 'W', 16, 16, 16 };
-const Colour P = { 'P', 16, 0, 16 };
-const Colour Y = { 'Y', 16, 8, 0 };
-const Colour O = { 'O', 16, 4, 0 };
-const Colour C = { 'C', 0, 16, 16 };
-const Colour N = { 'N', 0, 0, 0 };
-
-
-// Colour colours[8] = { RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, PURPLE, WHITE };
+Colour colours[8] = { R, O, Y, G, C, B, P, W };
 
 byte currentRow = 0;
 
@@ -107,7 +100,7 @@ void setup() {
   PORTF = B11111111;
   PORTK = B11111111;
   PORTL = B11111111;
-
+  
   pinMode(dataPin, OUTPUT);
   pinMode(storageClockPin, OUTPUT);
   pinMode(shiftClockPin, OUTPUT);
@@ -115,25 +108,30 @@ void setup() {
   writeShiftRegister(0);
 
   anchorTime = millis();
+
+  for (int i = 0; i < 8; i++) {
+    colours[i].printOut();
+    Serial.println();
+  }
+
 }
 
 void loop() {
   deltaTime = millis() - anchorTime;
-
   for (int i = 0; i < 8; i++) {
     cyclePower();
     displayRed();
     displayGreen();
     displayBlue();
   }
-  // delay(2); // About the time delay of game logic (Hopefully)
+  delay(2);  // About the time delay of game logic (Hopefully)
 }
 
 void displayRed() {
-  for (int i = 0; i < 16; i++) {  //Resolution
+  for (int i = 0; i < 8; i++) {  //Resolution
     int bitMask = 0;
     for (int j = 0; j < 16; j++) {
-      bitMask |= (display[currentRow][j].red >= (i + 1));
+      bitMask |= (display[currentRow][j].getRed() >= (i + 1));
       if (j != 15) {
         bitMask <<= 1;
       }
@@ -145,10 +143,10 @@ void displayRed() {
 }
 
 void displayGreen() {
-  for (int i = 0; i < 16; i++) {  //Resolution
+  for (int i = 0; i < 8; i++) {  //Resolution
     int bitMask = 0;
     for (int j = 0; j < 16; j++) {
-      bitMask |= (display[currentRow][j].green >= (i + 1));
+      bitMask |= (display[currentRow][j].getGreen() >= (i + 1));
       if (j != 15) {
         bitMask <<= 1;
       }
@@ -160,10 +158,10 @@ void displayGreen() {
 }
 
 void displayBlue() {
-  for (int i = 0; i < 16; i++) {  //Resolution
+  for (int i = 0; i < 8; i++) {  //Resolution
     int bitMask = 0;
     for (int j = 0; j < 16; j++) {
-      bitMask |= (display[currentRow][j].blue >= (i + 1));
+      bitMask |= (display[currentRow][j].getBlue() >= (i + 1));
       if (j != 15) {
         bitMask <<= 1;
       }
