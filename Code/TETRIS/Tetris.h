@@ -2,7 +2,4 @@
 #define TETRS_H
 #include <Arduino.h>
 
-
-
-
 #endif

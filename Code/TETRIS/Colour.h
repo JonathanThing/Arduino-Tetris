@@ -26,6 +26,7 @@ class Colour {
     void changeColour(byte redDelta, byte greenDelta, byte blueDelta); 
 };
 
+
 extern Colour R;
 extern Colour G;
 extern Colour B;
