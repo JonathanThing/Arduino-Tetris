@@ -9,6 +9,8 @@ bool inputs[numberOfButtons] = { 0, 0, 0, 0, 0, 0, 0 };
 long anchorTime = 0;
 long deltaTime = 0;
 
+long deltaButtonTime = 0;
+
 Tetris::Tetris() {
   gameState = 0;  // 0 Menu, 1 Game, 2 Lose
   anchorTime = millis();
@@ -56,6 +58,8 @@ Tetris::Tetris() {
       }
     }
   }
+
+  anchorTime = millis();
 }
 
 void handleInput() {
@@ -64,7 +68,44 @@ void handleInput() {
   }
 }
 
+void Tetris::menuUpdate() {
+  bool buttonPressed = false;
+  for (int i = 0; i < numberOfButtons; i++) {
+    buttonPressed = buttonPressed || digitalRead(buttonPins[i]);
+  }
+  if (buttonPressed && deltaButtonTime == 0) {
+    Serial.println("Button Depressed");
+    deltaButtonTime = micros();
+    Serial.print("Anchor Time: ");
+    Serial.println(deltaButtonTime);
+  } else if (buttonPressed == 0 && deltaButtonTime > 0) {
+    Serial.println("Button Released");
+    Serial.print("currentTime: ");
+    Serial.println(micros());
+    Serial.println(micros()-deltaButtonTime);
+    randomSeed(micros()-deltaButtonTime);
+    deltaButtonTime = 0;
+    // gameState = 1;
+  }
+}
+
+void Tetris::gameUpdate() {
+
+}
+
+void Tetris::loseUpdate() {
+
+}
+
 void Tetris::update() {
+  handleInput();  
+  if (gameState == 0) {
+    menuUpdate();
+  } else if (gameState == 1) {
+    gameUpdate();
+  } else {
+    loseUpdate();
+  }
 }
 
 byte Tetris::getGameState() {

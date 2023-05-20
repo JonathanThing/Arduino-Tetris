@@ -5,6 +5,9 @@
 
 class Tetris {
 private:
+  void gameUpdate();
+  void menuUpdate();
+  void loseUpdate();
   byte gameState;
   Colour display[8][16];
 

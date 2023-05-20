@@ -121,19 +121,19 @@ RGBMatrix::RGBMatrix() {
 }
 
 void drawDisplay(Colour (&display)[8][16]) {
-  for (int c = 0; c < 3; c++) {
+  for (int colour = 0; colour < 3; colour++) {
     for (int i = 0; i < 8; i++) {  // Resolution
       int bitMask = 0;
       for (int j = 0; j < 16; j++) {
-        bitMask |= (display[currentRow][j].getColour(c) >= (i + 1));
+        bitMask |= (display[currentRow][j].getColour(colour) >= (i + 1));
         if (j != 15) {
           bitMask <<= 1;
         }
       }
-      writeColour(c, ~bitMask);
+      writeColour(colour, ~bitMask);
       delayMicroseconds(timePerResolution);
     }
-    writeColour(c, MAX_INT);
+    writeColour(colour, MAX_INT);
   }
 }
 

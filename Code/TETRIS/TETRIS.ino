@@ -17,8 +17,9 @@ void setup()
 
 void loop()
 {
+  Serial.println(millis());
   game.update();
   music.update();
-  screen.draw(game.getDisplay());
-  delay(2); // About the time delay of game logic (Hopefully)
+  // screen.draw(game.getDisplay());
+  // delay(2); // About the time delay of game logic (Hopefully)
 }
