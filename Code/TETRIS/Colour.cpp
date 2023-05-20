@@ -1,17 +1,17 @@
 #include "Colour.h"
 
-static Colour R = Colour(MAX_VALUE, 0, 0);
-static Colour G = Colour(0, MAX_VALUE, 0);
-static Colour B = Colour(0, 0, MAX_VALUE);
-static Colour W = Colour(MAX_VALUE, MAX_VALUE, MAX_VALUE);
-static Colour P = Colour(MAX_VALUE, 0, MAX_VALUE);
-static Colour Y = Colour(MAX_VALUE, MAX_VALUE / 2, 0);
-static Colour O = Colour(MAX_VALUE, MAX_VALUE / 4, 0);
-static Colour C = Colour(0, MAX_VALUE, MAX_VALUE);
-static Colour N = Colour(0, 0, 0);
-
 // Constants
 byte MAX_VALUE = 8;
+
+const Colour Colour::RED = Colour(MAX_VALUE, 0, 0);
+const Colour Colour::GREEN = Colour(0, MAX_VALUE, 0);
+const Colour Colour::BLUE = Colour(0, 0, MAX_VALUE);
+const Colour Colour::WHITE = Colour(MAX_VALUE, MAX_VALUE, MAX_VALUE);
+const Colour Colour::PURPLE = Colour(MAX_VALUE, 0, MAX_VALUE);
+const Colour Colour::YELLOW = Colour(MAX_VALUE, MAX_VALUE / 2, 0);
+const Colour Colour::ORANGE = Colour(MAX_VALUE, MAX_VALUE / 4, 0);
+const Colour Colour::CYAN = Colour(0, MAX_VALUE, MAX_VALUE);
+const Colour Colour::BLACK = Colour(0, 0, 0);
 
 Colour::Colour() {
   red = 0;
@@ -102,6 +102,16 @@ void Colour::changeColour(byte redDelta, byte greenDelta, byte blueDelta) {
     blue = 0;
   } else if (blue > MAX_VALUE) {
     blue = MAX_VALUE;
+  }
+}
+
+byte Colour::getColour(byte selection) {
+  if (selection == 0) {
+    return red;
+  } else if (selection == 1) {
+    return green;
+  } else {
+    return blue;
   }
 }
 

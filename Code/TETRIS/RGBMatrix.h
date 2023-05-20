@@ -5,15 +5,8 @@
 
 class RGBMatrix {
 private:
-  Colour display[8][16];
-  byte currentRow;
-  void cyclePower();
-  void displayRed();
-  void displayGreen();
-  void displayBlue();
 public:
   RGBMatrix();
-  void draw();
-  void init();
+  void draw(Colour (&displayInput)[8][16]);
 };
 #endif
