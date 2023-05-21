@@ -58,14 +58,44 @@ Tetris::Tetris() {
       }
     }
   }
-
-  anchorTime = millis();
 }
 
 void handleInput() {
   for (int i = 0; i < numberOfButtons; i++) {
     inputs[i] = digitalRead(buttonPins[i]);
   }
+}
+
+// 0 I, 1 J, 2 L, 3 O, 4 S, 5 T, 6 Z
+
+byte sevenBag[7] = { 0, 1, 2, 3, 4, 5, 6 };
+byte nextPiece = 7;
+byte holdPiece = 7;
+byte currentIndex = 7;
+byte currentPiece = 7;
+
+void randomizeBag() {
+  for (int i = 0; i < 7; i++) {
+    byte index = random(7);
+    byte temp = sevenBag[index];
+    sevenBag[index] = sevenBag[i];
+    sevenBag[i] = temp;
+  }
+
+  for (int i = 0; i < 7; i++) {
+    Serial.print(sevenBag[i]);
+  }
+}
+
+void getNextPiece() {
+  if (currentIndex == 7) {
+    randomizeBag();
+    currentIndex = 0;
+  } 
+
+  currentPiece = nextPiece;
+  nextPiece = sevenBag[currentIndex];
+  currentIndex++;
 }
 
 void Tetris::menuUpdate() {
@@ -76,22 +106,25 @@ void Tetris::menuUpdate() {
   if (buttonPressed && deltaButtonTime == 0) {
     deltaButtonTime = micros();
   } else if (buttonPressed == 0 && deltaButtonTime > 0) {
-    randomSeed(micros()-deltaButtonTime);
+    randomSeed(micros() - deltaButtonTime);
+    randomizeBag();
+    nextPiece = sevenBag[0];
+    currentIndex = 1;
     deltaButtonTime = 0;
     gameState = 1;
   }
 }
 
 void Tetris::gameUpdate() {
-
+  getNextPiece();
 }
 
 void Tetris::loseUpdate() {
-
 }
 
+
 void Tetris::update() {
-  handleInput();  
+  handleInput();
   if (gameState == 0) {
     menuUpdate();
   } else if (gameState == 1) {
