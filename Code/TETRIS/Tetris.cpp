@@ -74,18 +74,11 @@ void Tetris::menuUpdate() {
     buttonPressed = buttonPressed || digitalRead(buttonPins[i]);
   }
   if (buttonPressed && deltaButtonTime == 0) {
-    Serial.println("Button Depressed");
     deltaButtonTime = micros();
-    Serial.print("Anchor Time: ");
-    Serial.println(deltaButtonTime);
   } else if (buttonPressed == 0 && deltaButtonTime > 0) {
-    Serial.println("Button Released");
-    Serial.print("currentTime: ");
-    Serial.println(micros());
-    Serial.println(micros()-deltaButtonTime);
     randomSeed(micros()-deltaButtonTime);
     deltaButtonTime = 0;
-    // gameState = 1;
+    gameState = 1;
   }
 }
 

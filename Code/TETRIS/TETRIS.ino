@@ -10,16 +10,12 @@ static MusicPlayer music;
 void setup()
 {
   Serial.begin(9600);
-  screen = RGBMatrix();
-  game = Tetris();
-  music = MusicPlayer();
 }
 
 void loop()
 {
-  Serial.println(millis());
   game.update();
   music.update();
-  // screen.draw(game.getDisplay());
+  screen.draw(game.getDisplay());
   // delay(2); // About the time delay of game logic (Hopefully)
 }

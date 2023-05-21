@@ -20,7 +20,7 @@ Tone buzzer[TRACKS];
 
 void setup(){
 
-  Serial.begin(250000);
+  Serial.begin(9600);
 
   for(int i = 0; i < TRACKS; i++){
 
@@ -74,7 +74,7 @@ void loop(){
 
   while(duration <= totalduration){ //if song should be playing
     duration = millis() - offset; //how long song has been playing
-    
+    Serial.println(micros());
     for(int i = 0; i < TRACKS; i++){
       if(counter[i] < msize[i]){  //make sure we're within bounds of this track
 
