@@ -1,11 +1,8 @@
 #include "RGBMatrix.h"
 #include "Tetris.h"
-#include "MusicPlayer.h"
-#include <Tone.h>
 
 static RGBMatrix screen;
-static Tetris game;
-static MusicPlayer music;
+static Tetris tetris;
 
 void setup()
 {
@@ -14,8 +11,6 @@ void setup()
 
 void loop()
 {
-  game.update();
-  music.update();
-  screen.draw(game.getDisplay());
-  // delay(2); // About the time delay of game logic (Hopefully)
+  tetris.update();
+  screen.draw(tetris.getDisplay());
 }

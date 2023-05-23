@@ -90,11 +90,12 @@ void cyclePower() {
 void writeShiftRegister(byte value) {
   for (int i = 7; i >= 0; i--) {
     writeDataPin(value & (1 << i));
-    writeShiftClockPin(HIGH);
     writeShiftClockPin(LOW);
+    writeShiftClockPin(HIGH);
   }
-  writeStorageClockPin(HIGH);
   writeStorageClockPin(LOW);
+  writeStorageClockPin(HIGH);
+
 }
 
 
