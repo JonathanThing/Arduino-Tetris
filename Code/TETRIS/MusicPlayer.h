@@ -2,12 +2,10 @@
 #define MUSIC_PLAYER_H
 #include <Arduino.h>
 #include <Tone.h>
+#include "Tetris.h"
 
-class MusicPlayer {
-private:
-public:
-  MusicPlayer();
-  void update();
-};
+void setupMusicPlayer();
+void updateMusicPlayer();
+
 
 #endif

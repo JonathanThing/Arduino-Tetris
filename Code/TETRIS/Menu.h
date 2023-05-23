@@ -1,16 +1,12 @@
 #ifndef MENU_H
 #define MENU_H
 #include <Arduino.h>
-#include "Colour.h"
+#include "Tetris.h"
 
-class Menu {
-private:
-  long deltaTimeButton;
-public:
-  Menu();
-  void update(byte inputs);
-  void init();
-  void loseUpdate(byte inputs);
-  void loseInit();
-};
+void setupMenu();
+void updateMenu();
+void initMenu();
+void updateLoseMenu();
+void initLoseMenu();
+
 #endif

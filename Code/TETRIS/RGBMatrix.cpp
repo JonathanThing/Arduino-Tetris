@@ -1,5 +1,4 @@
 #include "RGBMatrix.h"
-#include "Colour.h"
 
 const int MAX_INT = 65535;
 const int timePerFrame = 15000;
@@ -99,7 +98,7 @@ void writeShiftRegister(byte value) {
 }
 
 
-RGBMatrix::RGBMatrix() {
+void setupRGBMatrix() {
   DDRA = B11111111;
   DDRB = B11111111;
   DDRC = B11111111;
@@ -138,7 +137,7 @@ void drawDisplay(Colour (&display)[8][16]) {
   }
 }
 
-void RGBMatrix::draw(Colour (&display)[8][16]) {
+void draw(Colour (&display)[8][16]) {
   for (int i = 0; i < 8; i++) {
     cyclePower();
     drawDisplay(display);

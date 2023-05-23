@@ -1,18 +1,23 @@
 #include "Menu.h"
 
-Menu::Menu() {
+
+long deltaTimeButton = 0;
+
+
+void setupMenu() {
+
 }
 
-void Menu::init() {
+void initMenu() {
   deltaTimeButton = 0;
 }
-void Menu::loseUpdate(byte inputs) {
+void updateLoseMenu() {
 }
-void Menu::loseInit() {
+void initLoseMenu() {
   deltaTimeButton = 0;  
 }
 
-void Menu::update(byte inputs) {
+void updateMenu() {
   bool buttonPressed = false;
   for (int i = 0; i < 7; i++) {
     buttonPressed = buttonPressed || (inputs & 1 << 0);

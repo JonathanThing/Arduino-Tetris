@@ -31,12 +31,11 @@ void getNextPiece() {
   currentIndex++;
 }
 
-void Game::update(byte inputs) {
+void update() {
   getNextPiece();
 }
 
-void Game::init(long seed) {
-  randomSeed(seed);
+void initGame() {
   randomizeBag();
   nextPiece = sevenBag[0];
   currentIndex = 1;

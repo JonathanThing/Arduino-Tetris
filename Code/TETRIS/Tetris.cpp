@@ -1,6 +1,11 @@
 #include "Tetris.h"
 
-Tetris::Tetris() {
+byte gameState;
+Colour display[8][16];
+byte inputs;
+const byte buttonPins[7] = { 19, 3, 18, 15, 16, 17, 2 };
+
+void setupTetris() {
   changeGameState(0);  // 0 Menu, 1 Game, 2 Lose
   for (int i = 0; i < 7; i++) {
     pinMode(buttonPins[i], INPUT);
@@ -47,42 +52,38 @@ Tetris::Tetris() {
   }
 }
 
-void Tetris::readInputs() {
+void readInputs() {
   inputs = 0;
   for (int i = 0; i < 7; i++) {
     inputs |= digitalRead(buttonPins[i]) << i;
   }
 }
 
-void Tetris::update() {
+void updateTetris() {
   readInputs();
-  music.update();
+
   if (gameState == 0) {
-    menu.update(inputs);
+
   } else if (gameState == 1) {
-    game.update(inputs);
+
   } else {
-    menu.loseUpdate(inputs);
+
   }
 }
 
-byte Tetris::getGameState() {
+byte getGameState() {
   return gameState;
 }
 
-void Tetris::changeGameState(byte state) {
+void changeGameState(byte state) {
   if (state == 0) {
-    menu.init();
+
     gameState = 0;
   } else if (state == 1) {
-    game.init();
+
     gameState = 1;
   } else {
-    menu.loseInit();
+
     gameState = 2;
   }
-}
-
-Colour (&Tetris::getDisplay())[8][16] {
-  return display;
 }

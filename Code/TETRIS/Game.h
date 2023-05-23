@@ -1,14 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 #include <Arduino.h>
-#include "Colour.h"
+#include "Tetris.h"
 
-class Game {
-private:
+void setupGame();
+void updateGame();
+void initGame();
 
-public:
-  Game();
-  void update(byte inputs);
-  void init(long seed);
-};
 #endif

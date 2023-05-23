@@ -5,7 +5,7 @@ const byte numberOfBuzzers = 4;
 const byte buzzerPins[numberOfBuzzers] = { 9, 8, 7, 6 };
 static Tone buzzers[numberOfBuzzers];
 
-MusicPlayer::MusicPlayer() {
+void setupMusicPlayer() {
   // Piezo Buzzers
   for (int i = 0; i < numberOfBuzzers; i++) {
     pinMode(buzzerPins[i], OUTPUT);
@@ -18,6 +18,6 @@ MusicPlayer::MusicPlayer() {
   buzzers[3].play(440, 1);
 }
 
-void MusicPlayer::update() {
+void updateMusicPlayer() {
   
 }
