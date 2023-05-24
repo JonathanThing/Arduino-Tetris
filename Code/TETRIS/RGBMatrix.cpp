@@ -1,10 +1,14 @@
 #include "RGBMatrix.h"
 
-const int MAX_INT = 65535;
+#define MAX_INT B11111111
+const byte numberOfRows = 8;
+const byte numberOfLeds = 16;
+
+
 const int timePerFrame = 15000;
 const int timePerColour = timePerFrame / 3;
-const int timePerRow = timePerColour / 8;
-const int timePerResolution = (timePerRow - 17 * 16) / 16;
+const int timePerRow = timePerColour / numberOfRows;
+const int timePerResolution = timePerRow / COLOUR_MAX_VALUE;
 
 byte currentRow = 0;
 
@@ -20,7 +24,6 @@ byte currentRow = 0;
 // Red 2    Port L (Inverted)
 // Green 2  Port C (Inverted)
 // Blue 2   Port B (Inverted)
-
 
 // 2 microsecond length
 byte reverseByte(byte input) {
@@ -94,9 +97,7 @@ void writeShiftRegister(byte value) {
   }
   writeStorageClockPin(LOW);
   writeStorageClockPin(HIGH);
-
 }
-
 
 void setupRGBMatrix() {
   DDRA = B11111111;

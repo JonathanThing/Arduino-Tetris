@@ -5,12 +5,7 @@ Colour display[8][16];
 byte inputs;
 const byte buttonPins[7] = { 19, 3, 18, 15, 16, 17, 2 };
 
-void setupTetris() {
-  changeGameState(0);  // 0 Menu, 1 Game, 2 Lose
-  for (int i = 0; i < 7; i++) {
-    pinMode(buttonPins[i], INPUT);
-  }
-
+void funnyFunction() {
   char inputDisplay[8][16] = { { 'B', 'B', 'W', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'Y', 'O', 'R', 'O', 'Y' },
                                { 'B', 'W', 'W', 'W', 'B', 'B', 'B', 'B', 'W', 'B', 'B', 'Y', 'Y', 'O', 'Y', 'Y' },
                                { 'B', 'B', 'B', 'B', 'R', 'B', 'B', 'W', 'W', 'W', 'B', 'B', 'Y', 'Y', 'Y', 'B' },
@@ -52,6 +47,15 @@ void setupTetris() {
   }
 }
 
+void setupTetris() {
+  for (int i = 0; i < 7; i++) {
+    pinMode(buttonPins[i], INPUT);
+  }
+
+  funnyFunction();
+  changeGameState(0);  // 0 Menu, 1 Game, 2 Lose
+}
+
 void readInputs() {
   inputs = 0;
   for (int i = 0; i < 7; i++) {
@@ -63,11 +67,11 @@ void updateTetris() {
   readInputs();
 
   if (gameState == 0) {
-
+    updateMenu();
   } else if (gameState == 1) {
-
+    updateGame();
   } else {
-
+    updateLoseMenu();
   }
 }
 
@@ -77,13 +81,13 @@ byte getGameState() {
 
 void changeGameState(byte state) {
   if (state == 0) {
-
+    initMenu();
     gameState = 0;
   } else if (state == 1) {
-
+    initGame();
     gameState = 1;
   } else {
-
+    initLoseMenu();
     gameState = 2;
   }
 }

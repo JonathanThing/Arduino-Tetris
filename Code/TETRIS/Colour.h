@@ -2,7 +2,7 @@
 #define COLOUR_H
 #include <Arduino.h>
 
-extern byte MAX_VALUE;
+extern byte COLOUR_MAX_VALUE;
 
 class Colour {
 private:

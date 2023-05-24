@@ -2,7 +2,8 @@
 #define TETRS_H
 #include <Arduino.h>
 #include "Colour.h"
-
+#include "Game.h"
+#include "Menu.h"
 
 void readInputs();
 
