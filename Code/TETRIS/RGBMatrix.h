@@ -5,6 +5,6 @@
 #include "Colour.h"
 
 void setupRGBMatrix();
-void draw(Colour (&displayInput)[8][16]);
+void draw();
 
 #endif

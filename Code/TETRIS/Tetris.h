@@ -14,5 +14,6 @@ void changeGameState(byte state);
 
 extern byte inputs;
 extern byte gameState;
+extern Colour display[8][16];
 
 #endif

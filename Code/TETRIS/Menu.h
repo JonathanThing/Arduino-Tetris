@@ -9,4 +9,6 @@ void initMenu();
 void updateLoseMenu();
 void initLoseMenu();
 
+extern long deltaTimeButton;
+
 #endif

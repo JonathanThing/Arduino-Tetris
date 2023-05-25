@@ -2,15 +2,14 @@
 #include "Tetris.h"
 #include "MusicPlayer.h"
 
-void setup()
-{
+void setup() {
   Serial.begin(9600);
   setupRGBMatrix();
   setupTetris();
   setupMusicPlayer();
 }
 
-void loop()
-{
-
+void loop() {
+  updateTetris();
+  draw();
 }

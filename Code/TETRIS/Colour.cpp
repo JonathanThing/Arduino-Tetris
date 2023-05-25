@@ -61,8 +61,8 @@ void Colour::changeRed(byte delta) {
   red += delta;
   if (red < 0) {
     red = 0;
-  } else if (red > MAX_VALUE) {
-    red = MAX_VALUE;
+  } else if (red > COLOUR_MAX_VALUE) {
+    red = COLOUR_MAX_VALUE;
   }
 }
 
@@ -70,8 +70,8 @@ void Colour::changeGreen(byte delta) {
   green += delta;
   if (green < 0) {
     green = 0;
-  } else if (green > MAX_VALUE) {
-    green = MAX_VALUE;
+  } else if (green > COLOUR_MAX_VALUE) {
+    green = COLOUR_MAX_VALUE;
   }
 }
 
@@ -79,8 +79,8 @@ void Colour::changeBlue(byte delta) {
   blue += blue;
   if (blue < 0) {
     blue = 0;
-  } else if (blue > MAX_VALUE) {
-    blue = MAX_VALUE;
+  } else if (blue > COLOUR_MAX_VALUE) {
+    blue = COLOUR_MAX_VALUE;
   }
 }
 
@@ -90,18 +90,18 @@ void Colour::changeColour(byte redDelta, byte greenDelta, byte blueDelta) {
   blue += blueDelta;
   if (red < 0) {
     red = 0;
-  } else if (red > MAX_VALUE) {
-    red = MAX_VALUE;
+  } else if (red > COLOUR_MAX_VALUE) {
+    red = COLOUR_MAX_VALUE;
   }
   if (green < 0) {
     green = 0;
-  } else if (green > MAX_VALUE) {
-    green = MAX_VALUE;
+  } else if (green > COLOUR_MAX_VALUE) {
+    green = COLOUR_MAX_VALUE;
   }
   if (blue < 0) {
     blue = 0;
-  } else if (blue > MAX_VALUE) {
-    blue = MAX_VALUE;
+  } else if (blue > COLOUR_MAX_VALUE) {
+    blue = COLOUR_MAX_VALUE;
   }
 }
 

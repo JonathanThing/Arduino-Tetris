@@ -1,6 +1,6 @@
 #include "RGBMatrix.h"
 
-#define MAX_INT B11111111
+#define MAX_INT 65535
 const byte numberOfRows = 8;
 const byte numberOfLeds = 16;
 
@@ -8,7 +8,7 @@ const byte numberOfLeds = 16;
 const int timePerFrame = 15000;
 const int timePerColour = timePerFrame / 3;
 const int timePerRow = timePerColour / numberOfRows;
-const int timePerResolution = timePerRow / COLOUR_MAX_VALUE;
+const int timePerResolution = timePerRow / COLOUR_MAX_VALUE;  // (timePerRow-17*16) / 16;
 
 byte currentRow = 0;
 
@@ -121,7 +121,7 @@ void setupRGBMatrix() {
   currentRow = 0;
 }
 
-void drawDisplay(Colour (&display)[8][16]) {
+void drawDisplay() {
   for (int colour = 0; colour < 3; colour++) {
     for (int i = 0; i < 8; i++) {  // Resolution
       int bitMask = 0;
@@ -132,15 +132,22 @@ void drawDisplay(Colour (&display)[8][16]) {
         }
       }
       writeColour(colour, ~bitMask);
-      delayMicroseconds(timePerResolution);
+      // delayMicroseconds(timePerResolution);
     }
     writeColour(colour, MAX_INT);
   }
 }
 
-void draw(Colour (&display)[8][16]) {
+void draw() {
   for (int i = 0; i < 8; i++) {
     cyclePower();
-    drawDisplay(display);
+    drawDisplay();
   }
+  // for (int i = 0; i < 8; i++) {
+  //   for (int j = 0; j < 16; j++) {
+  //     display[i][j].printOut();
+  //   }
+  //   Serial.println();
+  // }
+  // Serial.println();
 }
