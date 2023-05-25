@@ -44,15 +44,9 @@ void menuFunnyFunction() {
   }
 }
 
-void setupMenu() {
-}
-
 void initMenu() {
   deltaTimeButton = 0;
   menuFunnyFunction();
-}
-
-void updateLoseMenu() {
 }
 
 void initLoseMenu() {
@@ -60,10 +54,14 @@ void initLoseMenu() {
 }
 
 void updateMenu() {
+}
+
+void updateLoseMenu() {
+}
+
+void awaitInput() {
   bool buttonPressed = false;
-  for (int i = 0; i < 7; i++) {
-    buttonPressed = buttonPressed || (inputs & 1 << i);
-  }
+  buttonPressed = (inputs > 0);
   if (buttonPressed && deltaTimeButton == 0) {
     deltaTimeButton = micros();
   } else if (!buttonPressed && deltaTimeButton > 0) {

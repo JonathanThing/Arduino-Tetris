@@ -7,7 +7,6 @@ byte holdPiece = 7;
 byte currentIndex = 7;
 byte currentPiece = 7;
 
-
 void funnyFunction() {
   char inputDisplay[8][16] = { { 'B', 'B', 'W', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'Y', 'O', 'R', 'O', 'Y' },
                                { 'B', 'W', 'W', 'W', 'B', 'B', 'B', 'B', 'W', 'B', 'B', 'Y', 'Y', 'O', 'Y', 'Y' },
@@ -50,6 +49,18 @@ void funnyFunction() {
   }
 }
 
+void initGame(long seed) {
+  funnyFunction();
+  Serial.println(seed);
+  randomSeed(seed);
+  randomizeBag();
+  nextPiece = sevenBag[0];
+  currentIndex = 1;
+}
+
+void updateGame() {
+  getNextPiece();
+}
 
 void randomizeBag() {
   for (int i = 0; i < 7; i++) {
@@ -69,17 +80,4 @@ void getNextPiece() {
   currentPiece = nextPiece;
   nextPiece = sevenBag[currentIndex];
   currentIndex++;
-}
-
-void initGame(long seed) {
-  funnyFunction();
-  Serial.println(seed);
-  randomSeed(seed);
-  randomizeBag();
-  nextPiece = sevenBag[0];
-  currentIndex = 1;
-}
-
-void updateGame() {
-  getNextPiece();
 }

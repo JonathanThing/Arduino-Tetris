@@ -1,28 +1,24 @@
 #include "Tetris.h"
+#include "MusicPlayer.h"
 
 byte gameState;
 Colour display[8][16];
-byte inputs;
+
+// User Input
+const byte numberOfButtons = 7;
+byte inputs = 0;
 const byte buttonPins[7] = { 19, 3, 18, 15, 16, 17, 2 };
 
 void setupTetris() {
   for (int i = 0; i < 7; i++) {
     pinMode(buttonPins[i], INPUT);
   }
-
+  setupMusicPlayer();
   changeGameState(0);  // 0 Menu, 1 Game, 2 Lose
-}
-
-void readInputs() {
-  inputs = 0;
-  for (int i = 0; i < 7; i++) {
-    inputs |= digitalRead(buttonPins[i]) << i;
-  }
 }
 
 void updateTetris() {
   readInputs();
-
   if (gameState == 0) {
     updateMenu();
   } else if (gameState == 1) {
@@ -30,10 +26,14 @@ void updateTetris() {
   } else {
     updateLoseMenu();
   }
+  updateMusicPlayer();
 }
 
-byte getGameState() {
-  return gameState;
+void readInputs() {
+  inputs = 0;
+  for (int i = 0; i < 7; i++) {
+    inputs |= digitalRead(buttonPins[i]) << i;
+  }
 }
 
 void changeGameState(byte state) {
@@ -47,4 +47,8 @@ void changeGameState(byte state) {
     initLoseMenu();
     gameState = 2;
   }
+}
+
+byte getGameState() {
+  return gameState;
 }

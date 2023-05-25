@@ -3,11 +3,11 @@
 #include <Arduino.h>
 #include "Tetris.h"
 
-void setupMenu();
-void updateMenu();
 void initMenu();
-void updateLoseMenu();
 void initLoseMenu();
+void updateMenu();
+void updateLoseMenu();
+void awaitInput();
 
 extern long deltaTimeButton;
 

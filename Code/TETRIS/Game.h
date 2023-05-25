@@ -3,8 +3,9 @@
 #include <Arduino.h>
 #include "Tetris.h"
 
-void setupGame();
 void updateGame();
+void getNextPiece();
+void randomizeBag();
 void initGame(long seed);
 
 #endif

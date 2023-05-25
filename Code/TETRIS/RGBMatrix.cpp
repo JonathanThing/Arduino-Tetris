@@ -123,7 +123,7 @@ void setupRGBMatrix() {
 
 void drawDisplay() {
   for (int colour = 0; colour < 3; colour++) {
-    for (int i = 0; i < 8; i++) {  // Resolution
+    for (int i = 0; i < COLOUR_MAX_VALUE; i++) {  // Resolution
       int bitMask = 0;
       for (int j = 0; j < 16; j++) {
         bitMask |= (display[currentRow][j].getColour(colour) >= (i + 1));
