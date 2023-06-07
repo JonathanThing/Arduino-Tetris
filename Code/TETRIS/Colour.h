@@ -10,15 +10,6 @@ private:
   byte green;
   byte blue;
 public:
-  static const Colour RED;
-  static const Colour GREEN;
-  static const Colour BLUE;
-  static const Colour WHITE;
-  static const Colour PURPLE;
-  static const Colour YELLOW;
-  static const Colour ORANGE;
-  static const Colour CYAN;
-  static const Colour BLACK;
   Colour();
   Colour(byte red, byte green, byte blue);
   byte getRed();
@@ -35,4 +26,15 @@ public:
   void changeColour(byte redDelta, byte greenDelta, byte blueDelta);
   byte getColour(byte selection);
 };
+
+extern const Colour RED;
+extern const Colour GREEN;
+extern const Colour BLUE;
+extern const Colour WHITE;
+extern const Colour PURPLE;
+extern const Colour YELLOW;
+extern const Colour ORANGE;
+extern const Colour CYAN;
+extern const Colour BLACK;
+
 #endif

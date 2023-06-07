@@ -9,8 +9,6 @@ private:
   byte rotation;
   byte boundingX;
   byte boundingY;
-  
-public:
-}
+};
 
 #endif
