@@ -16,28 +16,28 @@ void menuFunnyFunction() {
     for (int j = 0; j < 16; j++) {
       switch (inputDisplay[i][j]) {
         case 'R':
-          display[i][j] = Colour::RED;
+          display[i][j] = RED;
           break;
         case 'B':
-          display[i][j] = Colour::BLUE;
+          display[i][j] = BLUE;
           break;
         case 'G':
-          display[i][j] = Colour::GREEN;
+          display[i][j] = GREEN;
           break;
         case 'Y':
-          display[i][j] = Colour::YELLOW;
+          display[i][j] = YELLOW;
           break;
         case 'P':
-          display[i][j] = Colour::PURPLE;
+          display[i][j] = PURPLE;
           break;
         case 'W':
-          display[i][j] = Colour::WHITE;
+          display[i][j] = WHITE;
           break;
         case 'O':
-          display[i][j] = Colour::ORANGE;
+          display[i][j] = ORANGE;
           break;
         case 'C':
-          display[i][j] = Colour::CYAN;
+          display[i][j] = CYAN;
           break;
       }
     }
@@ -54,6 +54,7 @@ void initLoseMenu() {
 }
 
 void updateMenu() {
+  awaitInput();
 }
 
 void updateLoseMenu() {

@@ -3,15 +3,15 @@
 // Constants
 byte COLOUR_MAX_VALUE = 8;
 
-const Colour Colour::RED = Colour(COLOUR_MAX_VALUE, 0, 0);
-const Colour Colour::GREEN = Colour(0, COLOUR_MAX_VALUE, 0);
-const Colour Colour::BLUE = Colour(0, 0, COLOUR_MAX_VALUE);
-const Colour Colour::WHITE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
-const Colour Colour::PURPLE = Colour(COLOUR_MAX_VALUE, 0, COLOUR_MAX_VALUE);
-const Colour Colour::YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 2, 0);
-const Colour Colour::ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 4, 0);
-const Colour Colour::CYAN = Colour(0, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
-const Colour Colour::BLACK = Colour(0, 0, 0);
+const Colour RED = Colour(COLOUR_MAX_VALUE, 0, 0);
+const Colour GREEN = Colour(0, COLOUR_MAX_VALUE, 0);
+const Colour BLUE = Colour(0, 0, COLOUR_MAX_VALUE);
+const Colour WHITE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
+const Colour PURPLE = Colour(COLOUR_MAX_VALUE, 0, COLOUR_MAX_VALUE);
+const Colour YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 2, 0);
+const Colour ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 4, 0);
+const Colour CYAN = Colour(0, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
+const Colour BLACK = Colour(0, 0, 0);
 
 Colour::Colour() {
   red = 0;
