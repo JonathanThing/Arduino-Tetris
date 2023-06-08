@@ -18,12 +18,20 @@ public:
   int getTiles(byte rotation);
   void setX(byte x);
   void setY(byte y);
-  void setRotate(byte r);
-  void changeX(byte delta);
-  void changeY(byte delta);
+  void setRotation(byte r);
+  bool changeX(byte delta);
+  bool changeY(byte delta);
+  bool rotate(bool direction);
+  Colour getColour();
 };
 
-
+extern const Tetromino L_BLOCK;
+extern const Tetromino I_BLOCK;
+extern const Tetromino J_BLOCK;
+extern const Tetromino O_BLOCK;
+extern const Tetromino Z_BLOCK;
+extern const Tetromino S_BLOCK;
+extern const Tetromino T_BLOCK;
 
 
 #endif
