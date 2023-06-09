@@ -37,14 +37,14 @@ byte reverseByte(byte input) {
 }
 
 // LEFT MSB 1000000010000000 LSB RIGHT
-void writeColour(int selection, int value) {
-  if (selection == 0) {  // Red
+void writeColour(int colour, int value) {
+  if (colour == 0) {  // Red
     PORTL = (byte)(value >> 8 & 255);
     PORTK = reverseByte((byte)value);  // PORT K IS NOT INVERTED
-  } else if (selection == 1) {         // Blue
+  } else if (colour == 1) {         // Green
     PORTC = (byte)(value >> 8 & 255);
     PORTA = (byte)(value);
-  } else {  // Green
+  } else {  // Blue
     PORTB = (byte)(value >> 8 & 255);
     PORTF = reverseByte((byte)value);  // PORT F IS NOT INVERTED
   }
@@ -143,11 +143,4 @@ void draw() {
     cyclePower();
     drawDisplay();
   }
-  // for (int i = 0; i < 8; i++) {
-  //   for (int j = 0; j < 16; j++) {
-  //     display[i][j].printOut();
-  //   }
-  //   Serial.println();
-  // }
-  // Serial.println();
 }

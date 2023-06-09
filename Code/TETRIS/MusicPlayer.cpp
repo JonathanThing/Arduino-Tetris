@@ -9,11 +9,6 @@ void setupMusicPlayer() {
     pinMode(buzzerPins[i], OUTPUT);
     buzzers[i].begin(buzzerPins[i]);
   }
-  // // This code is needed for the rgbmatrix to not break, Idk why
-  buzzers[0].play(440, 1);
-  buzzers[1].play(440, 1);
-  buzzers[2].play(440, 1);
-  buzzers[3].play(440, 1);
 }
 
 void updateMusicPlayer() {

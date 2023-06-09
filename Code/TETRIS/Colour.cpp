@@ -8,10 +8,12 @@ const Colour GREEN = Colour(0, COLOUR_MAX_VALUE, 0);
 const Colour BLUE = Colour(0, 0, COLOUR_MAX_VALUE);
 const Colour WHITE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
 const Colour PURPLE = Colour(COLOUR_MAX_VALUE, 0, COLOUR_MAX_VALUE);
-const Colour YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 2, 0);
-const Colour ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 4, 0);
+const Colour YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 4, 0);
+const Colour ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 8, 0);
 const Colour CYAN = Colour(0, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
 const Colour BLACK = Colour(0, 0, 0);
+
+const Colour ALL_COLOURS[9] = {RED, ORANGE, YELLOW, GREEN, BLUE, CYAN, PURPLE, WHITE, BLACK};
 
 Colour::Colour() {
   red = 0;

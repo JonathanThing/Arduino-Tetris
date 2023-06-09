@@ -2,6 +2,7 @@
 #define GAME_H
 #include <Arduino.h>
 #include "Tetris.h"
+#include "Tetromino.h"
 
 void updateGame();
 void getNextPiece();

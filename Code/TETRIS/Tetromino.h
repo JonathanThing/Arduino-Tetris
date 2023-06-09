@@ -3,15 +3,13 @@
 #include <Arduino.h>
 #include "Colour.h"
 
-class Tetromino {
-private:
+struct Tetromino {
   byte positionX;
   byte positionY;
   byte rotation;
-  Colour colour;
-  int tiles[4];
-public:
-  Tetromino(Colour colour, int tiles[4]);
+  Colour *colour;
+  int *tiles;
+  Tetromino(Colour *colour, int *tiles);
   byte getX();
   byte getY();
   byte getRotation();
@@ -23,6 +21,7 @@ public:
   bool changeY(byte delta);
   bool rotate(bool direction);
   Colour getColour();
+  void printOut();
 };
 
 extern const Tetromino L_BLOCK;
@@ -33,5 +32,6 @@ extern const Tetromino Z_BLOCK;
 extern const Tetromino S_BLOCK;
 extern const Tetromino T_BLOCK;
 
+extern const Tetromino blocks[7];
 
 #endif
