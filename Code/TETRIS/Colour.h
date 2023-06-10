@@ -4,12 +4,11 @@
 
 extern byte COLOUR_MAX_VALUE;
 
-class Colour {
-private:
+struct Colour {
   byte red;
   byte green;
   byte blue;
-public:
+
   Colour();
   Colour(byte red, byte green, byte blue);
   byte getRed();
@@ -36,5 +35,8 @@ extern const Colour YELLOW;
 extern const Colour ORANGE;
 extern const Colour CYAN;
 extern const Colour BLACK;
+
+extern const Colour ALL_COLOURS[9];
+
 
 #endif

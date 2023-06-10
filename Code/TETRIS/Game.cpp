@@ -50,25 +50,11 @@ void funnyFunction() {
 }
 
 void initGame(long seed) {
-  funnyFunction();
   Serial.println(seed);
   randomSeed(seed);
   randomizeBag();
   nextPiece = sevenBag[0];
   currentIndex = 1;
-}
-
-void updateGame() {
-  getNextPiece();
-}
-
-void randomizeBag() {
-  for (int i = 0; i < 7; i++) {
-    byte index = random(7);
-    byte temp = sevenBag[index];
-    sevenBag[index] = sevenBag[i];
-    sevenBag[i] = temp;
-  }
 }
 
 void getNextPiece() {
@@ -80,4 +66,36 @@ void getNextPiece() {
   currentPiece = nextPiece;
   nextPiece = sevenBag[currentIndex];
   currentIndex++;
+}
+
+Tetromino currentBlock = blocks[0]; 
+
+long gameTimeAnchor = millis();
+
+void updateGame() {
+  long deltaTime = millis() - gameTimeAnchor;
+  if (deltaTime > 1000) {
+    gameTimeAnchor = millis();
+    currentBlock.printOut();
+    Serial.println(currentPiece);
+  } 
+
+  if (deltaTime > 250) {
+    if (inputs & 1) {
+      getNextPiece();
+      currentBlock = blocks[currentPiece];
+    } else if (inputs & 2) {
+      currentBlock.rotate(true);
+    }
+  } 
+
+}
+
+void randomizeBag() {
+  for (int i = 0; i < 7; i++) {
+    byte index = random(7);
+    byte temp = sevenBag[index];
+    sevenBag[index] = sevenBag[i];
+    sevenBag[i] = temp;
+  }
 }
