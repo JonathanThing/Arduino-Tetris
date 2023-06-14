@@ -4,7 +4,7 @@ const byte numberOfButtons = 7;
 const byte buttonPins[numberOfButtons] = { 19, 3, 18, 15, 16, 17, 2 };
 
 byte gameState;
-Colour display[8][16];
+Colour *display[8][16];
 byte inputs = 0;
 
 void setupTetris() {

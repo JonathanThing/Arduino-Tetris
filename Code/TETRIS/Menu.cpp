@@ -16,28 +16,31 @@ void menuFunnyFunction() {
     for (int j = 0; j < 16; j++) {
       switch (inputDisplay[i][j]) {
         case 'R':
-          display[i][j] = RED;
+          display[i][j] = &RED;
           break;
         case 'B':
-          display[i][j] = BLUE;
+          display[i][j] = &BLUE;
           break;
         case 'G':
-          display[i][j] = GREEN;
+          display[i][j] = &GREEN;
           break;
         case 'Y':
-          display[i][j] = YELLOW;
+          display[i][j] = &YELLOW;
           break;
         case 'P':
-          display[i][j] = PURPLE;
+          display[i][j] = &PURPLE;
           break;
         case 'W':
-          display[i][j] = WHITE;
+          display[i][j] = &WHITE;
           break;
         case 'O':
-          display[i][j] = ORANGE;
+          display[i][j] = &ORANGE;
           break;
         case 'C':
-          display[i][j] = CYAN;
+          display[i][j] = &CYAN;
+          break;
+        case 'N':
+          display[i][j] = &BLACK;
           break;
       }
     }
@@ -58,28 +61,28 @@ void menuFunnyFunctionDie() {
     for (int j = 0; j < 16; j++) {
       switch (inputDisplay[i][j]) {
         case 'R':
-          display[i][j] = RED;
+          display[i][j] = &RED;
           break;
         case 'B':
-          display[i][j] = BLUE;
+          display[i][j] = &BLUE;
           break;
         case 'G':
-          display[i][j] = GREEN;
+          display[i][j] = &GREEN;
           break;
         case 'Y':
-          display[i][j] = YELLOW;
+          display[i][j] = &YELLOW;
           break;
         case 'P':
-          display[i][j] = PURPLE;
+          display[i][j] = &PURPLE;
           break;
         case 'W':
-          display[i][j] = WHITE;
+          display[i][j] = &WHITE;
           break;
         case 'O':
-          display[i][j] = ORANGE;
+          display[i][j] = &ORANGE;
           break;
         case 'C':
-          display[i][j] = CYAN;
+          display[i][j] = &CYAN;
           break;
       }
     }

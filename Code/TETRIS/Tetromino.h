@@ -6,9 +6,9 @@
 struct Tetromino {
   char symbol;
   Colour *colour;
-  uint16_t *tiles;
+  int *tiles;
   Tetromino();
-  Tetromino(Colour *colour, uint16_t *tiles, char symbol);
+  Tetromino(Colour *colour, int *tiles, char symbol);
   void printRotation(byte rotation);
 };
 

@@ -35,6 +35,7 @@ extern const Colour YELLOW;
 extern const Colour ORANGE;
 extern const Colour CYAN;
 extern const Colour BLACK;
+extern const Colour GREY;
 
 extern const Colour ALL_COLOURS[9];
 

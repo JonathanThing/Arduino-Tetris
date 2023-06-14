@@ -12,6 +12,7 @@ const Colour YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE/4, 0);
 const Colour ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE/8, 0);
 const Colour CYAN = Colour(0, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
 const Colour BLACK = Colour(0, 0, 0);
+const Colour GREY = Colour(1, 1, 1);
 
 const Colour ALL_COLOURS[9] = {RED, ORANGE, YELLOW, GREEN, BLUE, CYAN, PURPLE, WHITE, BLACK};
 

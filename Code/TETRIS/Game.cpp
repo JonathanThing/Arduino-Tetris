@@ -14,31 +14,39 @@ Tetromino holdBlock = Tetromino();
 void randomizeBag();
 void getNextBlock();
 void getHoldBlock();
+void drawNextBlock();
 
 byte gameSpace[8][14];
 
 void clearDisplay() {
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 2; j++) {
-      display[i][j] = WHITE;
+      display[i][j] = &GREY;
     }
   }
 
   for (int i = 0; i < 8; i++) {
     for (int j = 2; j < 16; j++) {
-      display[i][j] = BLACK;
+      display[i][j] = &BLACK;
     }
   }
 }
 
 int test = 0;
 
-void printPiece() {
+void printBlocks() {
+  Serial.print("Current: ");
   Serial.print(currentBlock.symbol);
   Serial.print(" ");
   currentBlock.colour->printOut();
   Serial.print(" ");
   currentBlock.printRotation(test);
+  Serial.print("\tNext: ");
+  Serial.print(nextBlock.symbol);
+  Serial.print(" ");
+  nextBlock.colour->printOut();
+  Serial.print(" ");
+  nextBlock.printRotation(test);
   Serial.println();
 }
 
@@ -51,7 +59,8 @@ void initGame(long seed) {
   nextBlockIndex = 1;
   currentBlock = blocks[sevenBag[0]];
   nextBlock = blocks[sevenBag[nextBlockIndex]];
-  printPiece();
+  printBlocks();
+  drawNextBlock();
 }
 
 void updateGame() {
@@ -67,7 +76,20 @@ void updateGame() {
     }
     if (inputs > 0) {
       gameTimeAnchor = millis();
-      printPiece();
+      printBlocks();
+      drawNextBlock();
+    }
+  }
+}
+
+void drawNextBlock() {
+  for (int rows = 0; rows < 2; rows++) {
+    for (int cols = 0; cols < 4; cols++) {
+      if (nextBlock.tiles[0] & (1<<(rows*4 + cols))){
+        display[3-cols][rows] = nextBlock.colour;
+      } else {
+        display[3-cols][rows] = &GREY;
+      }
     }
   }
 }

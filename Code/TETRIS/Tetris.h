@@ -12,7 +12,7 @@ void updateTetris();
 void changeGameState(byte state);
 
 extern byte inputs;
-extern Colour display[8][16];
+extern Colour *display[8][16];
 extern byte gameState;
 
 #endif
