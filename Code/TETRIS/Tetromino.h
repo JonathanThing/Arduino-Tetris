@@ -4,10 +4,11 @@
 #include "Colour.h"
 
 struct Tetromino {
+  char symbol;
   Colour *colour;
-  int *tiles;
+  uint16_t *tiles;
   Tetromino();
-  Tetromino(Colour *colour, int *tiles);
+  Tetromino(Colour *colour, uint16_t *tiles, char symbol);
   void printRotation(byte rotation);
 };
 

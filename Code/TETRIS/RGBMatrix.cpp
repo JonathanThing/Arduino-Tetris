@@ -89,6 +89,9 @@ void drawRow() {
         }
       }
       writeColour(colour, ~bitMask);
+      // if(colour == 0) {
+      //   delayMicroseconds(50);
+      // }
     }
     writeColour(colour, MAX_INT);
   }

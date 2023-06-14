@@ -6,6 +6,7 @@ void setup() {
   Serial.begin(9600);
   setupRGBMatrix();
   setupTetris();
+
 }
 
 void loop() {
