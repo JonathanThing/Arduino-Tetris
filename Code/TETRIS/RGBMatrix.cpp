@@ -9,7 +9,7 @@ byte currentRow;
 
 // Local Functions
 void cyclePower();
-void drawDisplay()
+void drawRow();
 void writeColour(int colour, int value);
 void writeShiftRegister(byte value);
 // Helper Functions
@@ -18,10 +18,10 @@ void writeShiftClockPin(bool value);
 void writeStorageClockPin(bool value);
 byte reverseByte(byte input);
 
-void draw() {
+void drawDisplay() {
   for (int i = 0; i < 8; i++) {
     cyclePower();
-    drawDisplay();
+    drawRow();
   }
 }
 
@@ -78,7 +78,7 @@ void writeShiftRegister(byte value) {
   writeStorageClockPin(HIGH);
 }
 
-void drawDisplay() {
+void drawRow() {
   for (int colour = 0; colour < 3; colour++) {
     for (int i = 0; i < COLOUR_MAX_VALUE; i++) {  // Resolution
       int bitMask = 0;

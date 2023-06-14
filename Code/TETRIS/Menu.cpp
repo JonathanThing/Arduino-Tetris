@@ -44,6 +44,48 @@ void menuFunnyFunction() {
   }
 }
 
+void menuFunnyFunctionDie() {
+  char inputDisplay[8][16] = { { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'B', 'B', 'B', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'B', 'N', 'N', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'B', 'N', 'N', 'B', 'B', 'B', 'B', 'B', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'B', 'N', 'N', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'B', 'N', 'B', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'B', 'B', 'N', 'N', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' } };
+
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 16; j++) {
+      switch (inputDisplay[i][j]) {
+        case 'R':
+          display[i][j] = RED;
+          break;
+        case 'B':
+          display[i][j] = BLUE;
+          break;
+        case 'G':
+          display[i][j] = GREEN;
+          break;
+        case 'Y':
+          display[i][j] = YELLOW;
+          break;
+        case 'P':
+          display[i][j] = PURPLE;
+          break;
+        case 'W':
+          display[i][j] = WHITE;
+          break;
+        case 'O':
+          display[i][j] = ORANGE;
+          break;
+        case 'C':
+          display[i][j] = CYAN;
+          break;
+      }
+    }
+  }
+}
+
 void initMenu() {
   deltaTimeButton = 0;
   menuFunnyFunction();
@@ -51,15 +93,15 @@ void initMenu() {
 
 void initLoseMenu() {
   deltaTimeButton = 0;
+  menuFunnyFunctionDie();
 }
 
+/*
 long deltaColourTimeThing = millis();
-
 byte colourIndex = 0;
-
 void cycleColour() {
   ALL_COLOURS[colourIndex].printOut();
-  
+
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 16; j++) {
       display[i][j] = ALL_COLOURS[colourIndex];
@@ -72,13 +114,15 @@ void cycleColour() {
   }
 }
 
+// long deltaTime = millis() - deltaColourTimeThing;
+// if (deltaTime > 500) {
+//   cycleColour();
+//   deltaColourTimeThing = millis();
+// }
+*/
+
 void updateMenu() {
   awaitInput();
-  // long deltaTime = millis() - deltaColourTimeThing;
-  // if (deltaTime > 500) {
-  //   cycleColour();
-  //   deltaColourTimeThing = millis();
-  // }
 }
 
 void updateLoseMenu() {

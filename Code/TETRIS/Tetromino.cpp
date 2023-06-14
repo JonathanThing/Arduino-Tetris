@@ -65,34 +65,17 @@ const Tetromino Z_BLOCK = { &RED, Z_BLOCK_TILES };
 const Tetromino S_BLOCK = { &GREEN, S_BLOCK_TILES };
 const Tetromino T_BLOCK = { &PURPLE, T_BLOCK_TILES };
 
-const Tetromino blocks[7] = {I_BLOCK, L_BLOCK, J_BLOCK, O_BLOCK, Z_BLOCK, S_BLOCK, T_BLOCK};
+const Tetromino blocks[7] = {I_BLOCK, O_BLOCK, T_BLOCK, J_BLOCK, L_BLOCK, S_BLOCK, Z_BLOCK};
+
+Tetromino::Tetromino() {
+  
+}
 
 Tetromino::Tetromino(Colour *colour, int *tiles) {
-  this->positionX = 0;
-  this->positionY = 0;
-  this->rotation = 0;
   this->colour = colour;
   this->tiles = tiles;
 }
 
-void Tetromino::printOut() {
-  Serial.print("Colour: ");
-  colour->printOut();
-  Serial.println();
-}
-
-bool Tetromino::rotate(bool direction) {
-  if (direction) {
-    rotation++;
-    if (rotation >= 4) {
-      rotation = 0;
-    }
-  } else {
-    rotation--;
-    if (rotation < 0) {
-      rotation = 3;
-    }
-  }
-
-  return true;
+void Tetromino::printRotation(byte rotation) {
+  Serial.println(tiles[rotation]);
 }

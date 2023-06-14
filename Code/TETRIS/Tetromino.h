@@ -4,24 +4,11 @@
 #include "Colour.h"
 
 struct Tetromino {
-  byte positionX;
-  byte positionY;
-  byte rotation;
   Colour *colour;
   int *tiles;
+  Tetromino();
   Tetromino(Colour *colour, int *tiles);
-  byte getX();
-  byte getY();
-  byte getRotation();
-  int getTiles(byte rotation);
-  void setX(byte x);
-  void setY(byte y);
-  void setRotation(byte r);
-  bool changeX(byte delta);
-  bool changeY(byte delta);
-  bool rotate(bool direction);
-  Colour getColour();
-  void printOut();
+  void printRotation(byte rotation);
 };
 
 extern const Tetromino L_BLOCK;

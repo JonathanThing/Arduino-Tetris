@@ -4,15 +4,15 @@
 #include "Colour.h"
 #include "Game.h"
 #include "Menu.h"
+#include "MusicPlayer.h"
 
 void readInputs();
 void setupTetris();
 void updateTetris();
-byte getGameState();
 void changeGameState(byte state);
 
 extern byte inputs;
 extern Colour display[8][16];
-extern const byte numberOfButtons;
+extern byte gameState;
 
 #endif
