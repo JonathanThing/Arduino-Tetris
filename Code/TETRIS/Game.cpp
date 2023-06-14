@@ -15,6 +15,7 @@ void randomizeBag();
 void getNextBlock();
 void getHoldBlock();
 void drawNextBlock();
+void drawCurrentBlock();
 
 byte gameSpace[8][14];
 
@@ -32,7 +33,9 @@ void clearDisplay() {
   }
 }
 
-int test = 0;
+byte blockX = 0;
+byte blockY = 0;
+byte rotation = 0;
 
 void printBlocks() {
   Serial.print("Current: ");
@@ -40,13 +43,13 @@ void printBlocks() {
   Serial.print(" ");
   currentBlock.colour->printOut();
   Serial.print(" ");
-  currentBlock.printRotation(test);
+  currentBlock.printRotation(rotation);
   Serial.print("\tNext: ");
   Serial.print(nextBlock.symbol);
   Serial.print(" ");
   nextBlock.colour->printOut();
   Serial.print(" ");
-  nextBlock.printRotation(test);
+  nextBlock.printRotation(rotation);
   Serial.println();
 }
 
@@ -63,26 +66,62 @@ void initGame(long seed) {
   drawNextBlock();
 }
 
+// 0 right, 1 left, 2 clockwise, 3 counter clockwise, 4 soft drop, 5 hard drop, 6 hold
+
 void updateGame() {
   long deltaTime = millis() - gameTimeAnchor;
   if (deltaTime > 250) {
-    if (inputs & 1) {
+    if (inputs & 1<<4) {
       getNextBlock();
-    } else if (inputs & 2) {
-      test++;
-      if (test > 4) {
-        test = 0;
+      printBlocks();
+    } else if (inputs & 1<<3) {
+      rotation++;
+      if (rotation > 3) {
+        rotation = 0;
       }
+    } else if (inputs & 1<<2) {
+      rotation--;
+      if (rotation > 3) {
+        rotation = 3;
+      }
+    } else if (inputs & 1<<0) {
+      blockX--;
+    } else if (inputs & 1<<1) {
+      blockX++;
+    } else if (inputs & 1<<5) {
+      blockY++;
     }
+
     if (inputs > 0) {
       gameTimeAnchor = millis();
-      printBlocks();
       drawNextBlock();
+      drawCurrentBlock();
+      Serial.println(rotation);
+    }
+  }
+}
+
+void drawCurrentBlock() {
+  for (int rows = 0; rows < 4; rows++) {
+    for (int cols = 0; cols < 4; cols++) {
+      byte screenX = blockX+cols+4;
+      byte screenY = blockY+rows;
+
+      if (currentBlock.tiles[rotation] & (1<<(rows*4 + cols)) && (17 >= screenY && screenY >= 0) && (7 >= screenX && screenX >= 0)) {
+        display[screenX][screenY] = currentBlock.colour;
+      } else {
+        display[screenX][screenY] = &BLACK;
+      }
     }
   }
 }
 
 void drawNextBlock() {
+  for (int i = 0; i < 8; i++) {
+      for (int j = 2; j < 16; j++) {
+        display[i][j] = &BLACK;
+      }
+    }
   for (int rows = 0; rows < 2; rows++) {
     for (int cols = 0; cols < 4; cols++) {
       if (nextBlock.tiles[0] & (1<<(rows*4 + cols))){
