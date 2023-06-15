@@ -16,31 +16,31 @@ void menuFunnyFunction() {
     for (int j = 0; j < 16; j++) {
       switch (inputDisplay[i][j]) {
         case 'R':
-          display[i][j] = &RED;
+          display[j][i] = &RED;
           break;
         case 'B':
-          display[i][j] = &BLUE;
+          display[j][i] = &BLUE;
           break;
         case 'G':
-          display[i][j] = &GREEN;
+          display[j][i] = &GREEN;
           break;
         case 'Y':
-          display[i][j] = &YELLOW;
+          display[j][i] = &YELLOW;
           break;
         case 'P':
-          display[i][j] = &PURPLE;
+          display[j][i] = &PURPLE;
           break;
         case 'W':
-          display[i][j] = &WHITE;
+          display[j][i] = &WHITE;
           break;
         case 'O':
-          display[i][j] = &ORANGE;
+          display[j][i] = &ORANGE;
           break;
         case 'C':
-          display[i][j] = &CYAN;
+          display[j][i] = &CYAN;
           break;
         case 'N':
-          display[i][j] = &BLACK;
+          display[j][i] = &BLACK;
           break;
       }
     }
@@ -61,28 +61,28 @@ void menuFunnyFunctionDie() {
     for (int j = 0; j < 16; j++) {
       switch (inputDisplay[i][j]) {
         case 'R':
-          display[i][j] = &RED;
+          display[j][i] = &RED;
           break;
         case 'B':
-          display[i][j] = &BLUE;
+          display[j][i] = &BLUE;
           break;
         case 'G':
-          display[i][j] = &GREEN;
+          display[j][i] = &GREEN;
           break;
         case 'Y':
-          display[i][j] = &YELLOW;
+          display[j][i] = &YELLOW;
           break;
         case 'P':
-          display[i][j] = &PURPLE;
+          display[j][i] = &PURPLE;
           break;
         case 'W':
-          display[i][j] = &WHITE;
+          display[j][i] = &WHITE;
           break;
         case 'O':
-          display[i][j] = &ORANGE;
+          display[j][i] = &ORANGE;
           break;
         case 'C':
-          display[i][j] = &CYAN;
+          display[j][i] = &CYAN;
           break;
       }
     }
@@ -125,13 +125,13 @@ void cycleColour() {
 */
 
 void updateMenu() {
-  awaitInput();
+  handleMenuInput();
 }
 
 void updateLoseMenu() {
 }
 
-void awaitInput() {
+void handleMenuInput() {
   bool buttonPressed = false;
   buttonPressed = (inputs > 0);
   if (buttonPressed && deltaTimeButton == 0) {

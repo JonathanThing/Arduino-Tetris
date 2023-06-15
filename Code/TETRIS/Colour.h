@@ -19,10 +19,10 @@ struct Colour {
   void setBlue(byte blue);
   void setColour(byte red, byte green, byte blue);
   void printOut();
-  void changeRed(byte delta);
-  void changeGreen(byte delta);
-  void changeBlue(byte delta);
-  void changeColour(byte redDelta, byte greenDelta, byte blueDelta);
+  void changeRed(int delta);
+  void changeGreen(int delta);
+  void changeBlue(int delta);
+  void changeColour(int redDelta, int greenDelta, int blueDelta);
   byte getColour(byte selection);
 };
 

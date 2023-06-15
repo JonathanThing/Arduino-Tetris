@@ -10,9 +10,10 @@ void readInputs();
 void setupTetris();
 void updateTetris();
 void changeGameState(byte state);
+void writeColour(byte x, byte y, Colour *colour);
 
 extern byte inputs;
-extern Colour *display[8][16];
+extern Colour *display[16][8];
 extern byte gameState;
 
 #endif

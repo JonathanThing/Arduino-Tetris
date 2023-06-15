@@ -8,8 +8,8 @@ const Colour GREEN = Colour(0, COLOUR_MAX_VALUE, 0);
 const Colour BLUE = Colour(0, 0, COLOUR_MAX_VALUE);
 const Colour WHITE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
 const Colour PURPLE = Colour(COLOUR_MAX_VALUE, 0, COLOUR_MAX_VALUE);
-const Colour YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE/4, 0);
-const Colour ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE/8, 0);
+const Colour YELLOW = Colour(COLOUR_MAX_VALUE, 2, 0);
+const Colour ORANGE = Colour(COLOUR_MAX_VALUE, 4, 0);
 const Colour CYAN = Colour(0, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
 const Colour BLACK = Colour(0, 0, 0);
 const Colour GREY = Colour(1, 1, 1);
@@ -60,7 +60,7 @@ void Colour::setColour(byte red, byte green, byte blue) {
   this->blue = blue;
 }
 
-void Colour::changeRed(byte delta) {
+void Colour::changeRed(int delta) {
   red += delta;
   if (red < 0) {
     red = 0;
@@ -69,7 +69,7 @@ void Colour::changeRed(byte delta) {
   }
 }
 
-void Colour::changeGreen(byte delta) {
+void Colour::changeGreen(int delta) {
   green += delta;
   if (green < 0) {
     green = 0;
@@ -78,7 +78,7 @@ void Colour::changeGreen(byte delta) {
   }
 }
 
-void Colour::changeBlue(byte delta) {
+void Colour::changeBlue(int delta) {
   blue += blue;
   if (blue < 0) {
     blue = 0;
@@ -87,7 +87,7 @@ void Colour::changeBlue(byte delta) {
   }
 }
 
-void Colour::changeColour(byte redDelta, byte greenDelta, byte blueDelta) {
+void Colour::changeColour(int redDelta, int greenDelta, int blueDelta) {
   red += redDelta;
   green += greenDelta;
   blue += blueDelta;

@@ -16,26 +16,36 @@ void getNextBlock();
 void getHoldBlock();
 void drawNextBlock();
 void drawCurrentBlock();
+void handleGameInput();
+void moveX(int deltaX);
+void moveY(int deltaY);
+void rotateBlock(bool clockwise);
+void hardDrop();
+void drawOutlineBlock();
+bool checkCollision(int x, int y, byte rotation);
+void findLowestPlace();
+void placeBlock();
+void updateGameScreen();
 
-byte gameSpace[8][14];
+char gameSpace[8][14];
 
 void clearDisplay() {
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 2; j++) {
-      display[i][j] = &GREY;
+      writeColour(i, j, &BLACK);
     }
   }
 
   for (int i = 0; i < 8; i++) {
     for (int j = 2; j < 16; j++) {
-      display[i][j] = &BLACK;
+      writeColour(i, j, &BLACK);
     }
   }
 }
 
-byte blockX = 0;
-byte blockY = 0;
-byte rotation = 0;
+int currentX = 3;
+int currentY = 13;
+byte currentRotation = 0;
 
 void printBlocks() {
   Serial.print("Current: ");
@@ -43,13 +53,13 @@ void printBlocks() {
   Serial.print(" ");
   currentBlock.colour->printOut();
   Serial.print(" ");
-  currentBlock.printRotation(rotation);
+  currentBlock.printRotation(currentRotation);
   Serial.print("\tNext: ");
   Serial.print(nextBlock.symbol);
   Serial.print(" ");
   nextBlock.colour->printOut();
   Serial.print(" ");
-  nextBlock.printRotation(rotation);
+  nextBlock.printRotation(currentRotation);
   Serial.println();
 }
 
@@ -64,70 +74,67 @@ void initGame(long seed) {
   nextBlock = blocks[sevenBag[nextBlockIndex]];
   printBlocks();
   drawNextBlock();
+  updateGameScreen();
+  drawCurrentBlock();
+
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 14; j++) {
+      gameSpace[i][j] = 0;
+    }
+  }
 }
 
 // 0 right, 1 left, 2 clockwise, 3 counter clockwise, 4 soft drop, 5 hard drop, 6 hold
 
+long moveAnchorTime = 0;
+
 void updateGame() {
   long deltaTime = millis() - gameTimeAnchor;
-  if (deltaTime > 250) {
-    if (inputs & 1<<4) {
-      getNextBlock();
-      printBlocks();
-    } else if (inputs & 1<<3) {
-      rotation++;
-      if (rotation > 3) {
-        rotation = 0;
-      }
-    } else if (inputs & 1<<2) {
-      rotation--;
-      if (rotation > 3) {
-        rotation = 3;
-      }
-    } else if (inputs & 1<<0) {
-      blockX--;
-    } else if (inputs & 1<<1) {
-      blockX++;
-    } else if (inputs & 1<<5) {
-      blockY++;
-    }
+  long moveDeltaTime = millis() - moveAnchorTime;
 
+  if (moveDeltaTime > 750) {
+    moveAnchorTime = millis();
+    moveY(-1);
+  }
+  if (deltaTime > 250) {
+    handleGameInput();
     if (inputs > 0) {
+
       gameTimeAnchor = millis();
-      drawNextBlock();
-      drawCurrentBlock();
-      Serial.println(rotation);
     }
   }
+  updateGameScreen();
+  drawCurrentBlock();
+  drawNextBlock();
 }
 
 void drawCurrentBlock() {
   for (int rows = 0; rows < 4; rows++) {
     for (int cols = 0; cols < 4; cols++) {
-      byte screenX = blockX+cols+4;
-      byte screenY = blockY+rows;
+      byte screenX = currentX + cols;
+      byte screenY = currentY - rows;
 
-      if (currentBlock.tiles[rotation] & (1<<(rows*4 + cols)) && (17 >= screenY && screenY >= 0) && (7 >= screenX && screenX >= 0)) {
-        display[screenX][screenY] = currentBlock.colour;
-      } else {
-        display[screenX][screenY] = &BLACK;
+      if ((17 >= screenY) && (7 >= screenX)) {
+        if (currentBlock.tiles[currentRotation] & (1 << (rows * 4 + cols))) {
+          writeColour(screenX, screenY, currentBlock.colour);
+        }
       }
     }
   }
 }
 
 void drawNextBlock() {
-  for (int i = 0; i < 8; i++) {
-      for (int j = 2; j < 16; j++) {
-        display[i][j] = &BLACK;
-      }
+  for (int y = 0; y < 2; y++) {
+    for (int x = 0; x < 4; x++) {
+      writeColour(x, 15 - y, &BLACK);
     }
+  }
   for (int rows = 0; rows < 2; rows++) {
     for (int cols = 0; cols < 4; cols++) {
-      if (nextBlock.tiles[0] & (1<<(rows*4 + cols))){
-        display[3-cols][rows] = nextBlock.colour;
+      if (nextBlock.tiles[0] & (1 << (rows * 4 + cols))) {
+        writeColour(4 + cols, 15 - rows, nextBlock.colour);
       } else {
-        display[3-cols][rows] = &GREY;
+        writeColour(4 + cols, 15 - rows, &BLACK);
       }
     }
   }
@@ -136,7 +143,7 @@ void drawNextBlock() {
 void getNextBlock() {
   currentBlock = nextBlock;
   nextBlockIndex++;
-    if (nextBlockIndex == 7) {
+  if (nextBlockIndex == 7) {
     randomizeBag();
     nextBlockIndex = 0;
   }
@@ -150,25 +157,147 @@ void randomizeBag() {
     sevenBag[index] = sevenBag[i];
     sevenBag[i] = temp;
   }
-
-  // Serial.println();
-
-  // for(int i = 0; i < 7; i++) {
-  //   Serial.print(sevenBag[i]);
-  //   Serial.print(" ");
-  // }
-
-  // Serial.println();
 }
 
 void getHoldBlock() {
   if (emptyHold) {
     emptyHold = false;
     holdBlock = currentBlock;
-    getNextPiece();
+    getNextBlock();
   } else {
     Tetromino tempBlock = currentBlock;
     currentBlock = holdBlock;
     holdBlock = currentBlock;
   }
 }
+
+void handleGameInput() {
+  if (inputs & 1 << 0) {
+    moveX(1);
+  } else if (inputs & 1 << 1) {
+    moveX(-1);
+  } else if (inputs & 1 << 2) {
+    rotateBlock(true);
+  } else if (inputs & 1 << 3) {
+    rotateBlock(false);
+  } else if (inputs & 1 << 4) {
+    moveY(-1);
+  } else if (inputs & 1 << 5) {
+    hardDrop();
+  } else if (inputs & 1 << 6) {
+    getNextBlock();
+    // getHoldBlock();
+  }
+}
+
+bool checkCollision(int x, int y, byte rotation) {
+  for (int rows = 0; rows < 4; rows++) {
+    for (int cols = 0; cols < 4; cols++) {
+      int tileX = x + cols;
+      int tileY = y - rows;
+
+      if (currentBlock.tiles[rotation] & (1 << (rows * 4 + cols))) {
+        if (!(0 <= tileY && tileY <= 13 && 0 <= tileX && tileX <= 7) || gameSpace[tileX][tileY] > 0) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+void moveX(int deltaX) {
+  int tempX = currentX + deltaX;
+  if (checkCollision(tempX, currentY, currentRotation)) {
+    currentX += deltaX;
+    Serial.print(currentX);
+    Serial.print(" ");
+    Serial.println(currentY);
+  }
+}
+
+void moveY(int deltaY) {
+  int tempY = currentY + deltaY;
+  if (checkCollision(currentX, tempY, currentRotation)) {
+    currentY += deltaY;
+  } else {
+    placeBlock();
+  }
+}
+
+void rotateBlock(bool clockwise) {
+  byte tempRotation = currentRotation;
+  if (clockwise) {
+    tempRotation++;
+    if (tempRotation > 3) {
+      tempRotation = 0;
+    }
+  } else {
+    tempRotation--;
+    if (tempRotation > 3) {
+      tempRotation = 3;
+    }
+  }
+
+  if (checkCollision(currentX, currentY, tempRotation)) {
+    currentRotation = tempRotation;
+  }
+}
+
+void placeBlock() {
+  for (int rows = 0; rows < 4; rows++) {
+    for (int cols = 0; cols < 4; cols++) {
+      int tileX = currentX + cols;
+      int tileY = currentY - rows;
+
+      if (currentBlock.tiles[currentRotation] & (1 << (rows * 4 + cols))) {
+        gameSpace[tileX][tileY] = currentBlock.symbol;
+      }
+    }
+  }
+
+  getNextBlock();
+  currentX = 3;
+  currentY = 13;
+  currentRotation = 0;
+}
+
+void updateGameScreen() {
+  for (int x = 0; x < 8; x++) {
+    for (int y = 0; y < 14; y++) {
+      switch (gameSpace[x][y]) {
+        case 'S':
+          writeColour(x, y, &RED);
+          break;
+        case 'L':
+          writeColour(x, y, &BLUE);
+          break;
+        case 'Z':
+          writeColour(x, y, &GREEN);
+          break;
+        case 'O':
+          writeColour(x, y, &YELLOW);
+          break;
+        case 'T':
+          writeColour(x, y, &PURPLE);
+          break;
+        case 'J':
+          writeColour(x, y, &ORANGE);
+          break;
+        case 'I':
+          writeColour(x, y, &CYAN);
+          break;
+        case 0:
+          writeColour(x, y, &BLACK);
+          break;
+      }
+    }
+  }
+}
+
+void hardDrop() {
+
+}
+
+

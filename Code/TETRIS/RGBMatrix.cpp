@@ -83,15 +83,15 @@ void drawRow() {
     for (int i = 0; i < COLOUR_MAX_VALUE; i++) {  // Resolution
       int bitMask = 0;
       for (int j = 0; j < 16; j++) {
-        bitMask |= (display[currentRow][j]->getColour(colour) >= (i + 1));
+        bitMask |= (display[j][currentRow]->getColour(colour) >= (i + 1));
         if (j != 15) {
           bitMask <<= 1;
         }
       }
       writeColour(colour, ~bitMask);
-      // if(colour == 0) {
-      //   delayMicroseconds(50);
-      // }
+      if(colour == 0) {
+        delayMicroseconds(25);
+      }
     }
     writeColour(colour, MAX_INT);
   }

@@ -4,7 +4,7 @@ const byte numberOfButtons = 7;
 const byte buttonPins[numberOfButtons] = { 19, 3, 18, 15, 16, 17, 2 };
 
 byte gameState;
-Colour *display[8][16];
+Colour *display[16][8];
 byte inputs = 0;
 
 void setupTetris() {
@@ -45,4 +45,10 @@ void changeGameState(byte state) {
     initLoseMenu();
     gameState = 2;
   }
+}
+
+// Convert game space coordinate to screen space (0,0) at bottom left to top left flipped.
+// (0,0) --> (15,7), (7,0) --> (15,0), (0,15) --> (0,7), (7,15) --> (0,0)
+void writeColour(byte x, byte y, Colour *colour) {
+  display[15-y][7-x] = colour;
 }

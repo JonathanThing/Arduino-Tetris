@@ -8,7 +8,7 @@ void initMenu();
 void initLoseMenu();
 void updateMenu();
 void updateLoseMenu();
-void awaitInput();
+void handleMenuInput();
 
 extern long deltaTimeButton;
 
