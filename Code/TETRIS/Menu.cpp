@@ -49,12 +49,12 @@ void menuFunnyFunction() {
 
 void menuFunnyFunctionDie() {
   char inputDisplay[8][16] = { { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'B', 'B', 'B', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'B', 'N', 'N', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'B', 'N', 'N', 'B', 'B', 'B', 'B', 'B', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'B', 'N', 'N', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'B', 'N', 'B', 'B', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'B', 'B', 'N', 'N', 'N', 'N', 'N', 'N', 'R', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
+                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
                                { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' } };
 
   for (int i = 0; i < 8; i++) {
@@ -83,6 +83,9 @@ void menuFunnyFunctionDie() {
           break;
         case 'C':
           display[j][i] = &CYAN;
+          break;
+        case 'N':
+          display[j][i] = &BLACK;
           break;
       }
     }
@@ -125,10 +128,13 @@ void cycleColour() {
 */
 
 void updateMenu() {
+  menuFunnyFunction();
   handleMenuInput();
 }
 
 void updateLoseMenu() {
+  menuFunnyFunctionDie();
+  handleMenuInput();
 }
 
 void handleMenuInput() {

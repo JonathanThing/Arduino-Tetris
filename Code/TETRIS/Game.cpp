@@ -1,10 +1,11 @@
 #include "Game.h"
-// 0 I, 1 O, 2 T, 3 J, 4 L, 5 S, 6 Z
 
-// I_BLOCK, O_BLOCK, T_BLOCK, J_BLOCK, L_BLOCK, S_BLOCK, Z_BLOCK
+const byte startX = 2;
+const byte startY = 13;
+
 byte sevenBag[7] = { 0, 1, 2, 3, 4, 5, 6 };
 long gameTimeAnchor = 0;
-
+bool canHold;
 bool emptyHold;
 byte nextBlockIndex;
 Tetromino currentBlock = I_BLOCK;
@@ -15,6 +16,7 @@ void randomizeBag();
 void getNextBlock();
 void getHoldBlock();
 void drawNextBlock();
+void drawHoldBlock();
 void drawCurrentBlock();
 void handleGameInput();
 void moveX(int deltaX);
@@ -26,25 +28,20 @@ bool checkCollision(int x, int y, byte rotation);
 int findLowestSpot();
 void placeBlock();
 void updateGameScreen();
+void removeLines();
 
 char gameSpace[8][14];
 
 void clearDisplay() {
   for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 2; j++) {
-      writeColour(i, j, &BLACK);
-    }
-  }
-
-  for (int i = 0; i < 8; i++) {
-    for (int j = 2; j < 16; j++) {
-      writeColour(i, j, &BLACK);
+    for (int j = 14; j < 16; j++) {
+      writeColour(i, j, &GREY);
     }
   }
 }
 
-int currentX = 3;
-int currentY = 13;
+int currentX = startX;
+int currentY = startY;
 byte currentRotation = 0;
 
 void printBlocks() {
@@ -65,15 +62,16 @@ void printBlocks() {
 
 void initGame(long seed) {
   clearDisplay();
-  Serial.println(seed);
   randomSeed(seed);
   randomizeBag();
   emptyHold = true;
+  canHold = true;
   nextBlockIndex = 1;
   currentBlock = blocks[sevenBag[0]];
   nextBlock = blocks[sevenBag[nextBlockIndex]];
-  printBlocks();
+  // printBlocks();
   drawNextBlock();
+  drawHoldBlock();
   updateGameScreen();
   drawCurrentBlock();
 
@@ -89,6 +87,7 @@ void initGame(long seed) {
 long moveAnchorTime = 0;
 
 void updateGame() {
+  clearDisplay();
   long deltaTime = millis() - gameTimeAnchor;
   long moveDeltaTime = millis() - moveAnchorTime;
 
@@ -107,6 +106,7 @@ void updateGame() {
   drawOutlineBlock();
   drawCurrentBlock();
   drawNextBlock();
+  drawHoldBlock();
 }
 
 void drawCurrentBlock() {
@@ -125,23 +125,30 @@ void drawCurrentBlock() {
 }
 
 void drawNextBlock() {
-  for (int y = 0; y < 2; y++) {
-    for (int x = 0; x < 4; x++) {
-      writeColour(x, 15 - y, &BLACK);
-    }
-  }
   for (int rows = 0; rows < 2; rows++) {
     for (int cols = 0; cols < 4; cols++) {
       if (nextBlock.tiles[0] & (1 << (rows * 4 + cols))) {
         writeColour(4 + cols, 15 - rows, nextBlock.colour);
-      } else {
-        writeColour(4 + cols, 15 - rows, &BLACK);
       }
     }
   }
 }
 
+void drawHoldBlock() {
+  if (!emptyHold) {
+    for (int rows = 0; rows < 2; rows++) {
+      for (int cols = 0; cols < 4; cols++) {
+        if (holdBlock.tiles[0] & (1 << (rows * 4 + cols))) {
+          writeColour(cols, 15 - rows, holdBlock.colour);
+        }
+      }
+    }
+  }
+}
+
+
 void getNextBlock() {
+  canHold = true;
   currentBlock = nextBlock;
   nextBlockIndex++;
   if (nextBlockIndex == 7) {
@@ -165,10 +172,14 @@ void getHoldBlock() {
     emptyHold = false;
     holdBlock = currentBlock;
     getNextBlock();
-  } else {
+  } else if (canHold) {
     Tetromino tempBlock = currentBlock;
     currentBlock = holdBlock;
-    holdBlock = currentBlock;
+    holdBlock = tempBlock;
+    canHold = false;
+    currentX = startX;
+    currentY = startY;
+    currentRotation = 0;
   }
 }
 
@@ -186,8 +197,7 @@ void handleGameInput() {
   } else if (inputs & 1 << 5) {
     hardDrop();
   } else if (inputs & 1 << 6) {
-    getNextBlock();
-    // getHoldBlock();
+    getHoldBlock();
   }
 }
 
@@ -212,9 +222,6 @@ void moveX(int deltaX) {
   int tempX = currentX + deltaX;
   if (checkCollision(tempX, currentY, currentRotation)) {
     currentX += deltaX;
-    Serial.print(currentX);
-    Serial.print(" ");
-    Serial.println(currentY);
   }
 }
 
@@ -247,6 +254,12 @@ void rotateBlock(bool clockwise) {
 }
 
 void placeBlock() {
+  if (currentX == startX && currentY == startY) {
+    clearDisplay();
+    changeGameState(2);
+    return;
+  }  
+
   for (int rows = 0; rows < 4; rows++) {
     for (int cols = 0; cols < 4; cols++) {
       int tileX = currentX + cols;
@@ -258,9 +271,10 @@ void placeBlock() {
     }
   }
 
+  removeLines();
   getNextBlock();
-  currentX = 3;
-  currentY = 13;
+  currentX = startX;
+  currentY = startY;
   currentRotation = 0;
 }
 
@@ -297,22 +311,57 @@ void updateGameScreen() {
   }
 }
 
-void clearLines() {
+void removeLines() {
+  byte remainingLines[14];
+  byte numberOfLines = 0;
+  byte lineIndex = 0;
+  for (int y = 0; y < 14; y++) {
+    bool full = true;
+    for (int x = 0; x < 8; x++) {
+      if (gameSpace[x][y] == 0) {
+        full = false;
+        break;
+      }
+    }
+    if (full) {
+      numberOfLines++;
+    } else {
+      remainingLines[lineIndex] = y;
+      lineIndex++;
+    }
+  }
+  char displayTemp[8][14];
+  for (int i = 0; i < lineIndex; i++) {
+    for (int x = 0; x < 8; x++) {
+      displayTemp[x][i] = gameSpace[x][remainingLines[i]];
+    }
+  }
+  for (int i = lineIndex; i < 14; i++) {
+    for (int x = 0; x < 8; x++) {
+      displayTemp[x][i] = 0;
+    }
+  }
 
+  for (int y = 0; y < 14; y++) {
+    for (int x = 0; x < 8; x++) {
+      gameSpace[x][y] = displayTemp[x][y];
+    }
+  }
 }
 
 void hardDrop() {
-
+  currentY = findLowestSpot();
+  placeBlock();
 }
 
 void drawOutlineBlock() {
   int lowestY = findLowestSpot();
-    for (int rows = 0; rows < 4; rows++) {
+  for (int rows = 0; rows < 4; rows++) {
     for (int cols = 0; cols < 4; cols++) {
       byte tileX = currentX + cols;
       byte tileY = lowestY - rows;
 
-      if ((17 >= tileY) && (7 >= tileY)) {
+      if ((17 >= tileX) && (7 >= tileX)) {
         if (currentBlock.tiles[currentRotation] & (1 << (rows * 4 + cols))) {
           writeColour(tileX, tileY, &GREY);
         }
@@ -331,5 +380,3 @@ int findLowestSpot() {
 
   return lowestY;
 }
-
-
