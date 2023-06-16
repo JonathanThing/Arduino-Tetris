@@ -23,7 +23,7 @@ void rotateBlock(bool clockwise);
 void hardDrop();
 void drawOutlineBlock();
 bool checkCollision(int x, int y, byte rotation);
-void findLowestPlace();
+int findLowestSpot();
 void placeBlock();
 void updateGameScreen();
 
@@ -104,6 +104,7 @@ void updateGame() {
     }
   }
   updateGameScreen();
+  drawOutlineBlock();
   drawCurrentBlock();
   drawNextBlock();
 }
@@ -111,8 +112,8 @@ void updateGame() {
 void drawCurrentBlock() {
   for (int rows = 0; rows < 4; rows++) {
     for (int cols = 0; cols < 4; cols++) {
-      byte screenX = currentX + cols;
-      byte screenY = currentY - rows;
+      int screenX = currentX + cols;
+      int screenY = currentY - rows;
 
       if ((17 >= screenY) && (7 >= screenX)) {
         if (currentBlock.tiles[currentRotation] & (1 << (rows * 4 + cols))) {
@@ -296,8 +297,39 @@ void updateGameScreen() {
   }
 }
 
+void clearLines() {
+
+}
+
 void hardDrop() {
 
+}
+
+void drawOutlineBlock() {
+  int lowestY = findLowestSpot();
+    for (int rows = 0; rows < 4; rows++) {
+    for (int cols = 0; cols < 4; cols++) {
+      byte tileX = currentX + cols;
+      byte tileY = lowestY - rows;
+
+      if ((17 >= tileY) && (7 >= tileY)) {
+        if (currentBlock.tiles[currentRotation] & (1 << (rows * 4 + cols))) {
+          writeColour(tileX, tileY, &GREY);
+        }
+      }
+    }
+  }
+}
+
+int findLowestSpot() {
+  int lowestY = currentY;
+
+  while (checkCollision(currentX, lowestY, currentRotation)) {
+    lowestY--;
+  }
+  lowestY++;
+
+  return lowestY;
 }
 
 
