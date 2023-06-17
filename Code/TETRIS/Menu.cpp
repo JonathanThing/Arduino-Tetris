@@ -48,18 +48,28 @@ void menuFunnyFunction() {
 }
 
 void menuFunnyFunctionDie() {
-  char inputDisplay[8][16] = { { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
-                               { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' } };
+  char inputDisplay[16][8] = {
+    { 'G', 'G', 'G', 'N', 'N', 'Y', 'N', 'N' },
+    { 'G', 'N', 'N', 'N', 'Y', 'N', 'Y', 'N' },
+    { 'G', 'N', 'G', 'N', 'Y', 'Y', 'Y', 'N' },
+    { 'G', 'G', 'G', 'N', 'Y', 'N', 'Y', 'N' },
+    { 'B', 'N', 'B', 'N', 'P', 'P', 'P', 'N' },
+    { 'B', 'B', 'B', 'N', 'P', 'N', 'N', 'N' },
+    { 'B', 'N', 'B', 'N', 'P', 'P', 'N', 'N' },
+    { 'B', 'N', 'B', 'N', 'P', 'P', 'P', 'N' },
+    { 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N' },
+    { 'C', 'C', 'C', 'N', 'O', 'N', 'O', 'N' },
+    { 'C', 'N', 'C', 'N', 'O', 'N', 'O', 'N' },
+    { 'C', 'C', 'C', 'N', 'N', 'O', 'N', 'N' },
+    { 'R', 'R', 'R', 'N', 'W', 'W', 'N', 'N' },
+    { 'R', 'N', 'N', 'N', 'W', 'N', 'W', 'N' },
+    { 'R', 'R', 'N', 'N', 'W', 'W', 'N', 'N' },
+    { 'R', 'R', 'R', 'N', 'W', 'N', 'W', 'N' }
+  };
 
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 16; j++) {
-      switch (inputDisplay[i][j]) {
+      switch (inputDisplay[j][7-i]) {
         case 'R':
           display[j][i] = &RED;
           break;
@@ -101,6 +111,7 @@ void initLoseMenu() {
   deltaTimeButton = 0;
   menuFunnyFunctionDie();
 }
+
 
 /*
 long deltaColourTimeThing = millis();

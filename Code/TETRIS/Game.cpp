@@ -11,6 +11,7 @@ byte nextBlockIndex;
 Tetromino currentBlock = I_BLOCK;
 Tetromino nextBlock = I_BLOCK;
 Tetromino holdBlock = Tetromino();
+bool placeBlockGracePeriod = true;
 
 void randomizeBag();
 void getNextBlock();
@@ -29,8 +30,15 @@ int findLowestSpot();
 void placeBlock();
 void updateGameScreen();
 void removeLines();
-
+void adjustFallSpeed();
 char gameSpace[8][14];
+
+const int defaultFallTime = 750;
+
+long score = 0;
+int linesRemoved = 0;
+int timePerFall = defaultFallTime;
+
 
 void clearDisplay() {
   for (int i = 0; i < 8; i++) {
@@ -44,23 +52,9 @@ int currentX = startX;
 int currentY = startY;
 byte currentRotation = 0;
 
-void printBlocks() {
-  Serial.print("Current: ");
-  Serial.print(currentBlock.symbol);
-  Serial.print(" ");
-  currentBlock.colour->printOut();
-  Serial.print(" ");
-  currentBlock.printRotation(currentRotation);
-  Serial.print("\tNext: ");
-  Serial.print(nextBlock.symbol);
-  Serial.print(" ");
-  nextBlock.colour->printOut();
-  Serial.print(" ");
-  nextBlock.printRotation(currentRotation);
-  Serial.println();
-}
-
 void initGame(long seed) {
+  Serial.print("Seed: ");
+  Serial.println(seed);
   clearDisplay();
   randomSeed(seed);
   randomizeBag();
@@ -69,11 +63,14 @@ void initGame(long seed) {
   nextBlockIndex = 1;
   currentBlock = blocks[sevenBag[0]];
   nextBlock = blocks[sevenBag[nextBlockIndex]];
-  // printBlocks();
   drawNextBlock();
   drawHoldBlock();
   updateGameScreen();
   drawCurrentBlock();
+
+  score = 0;
+  linesRemoved = 0;
+  timePerFall = defaultFallTime;
 
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 14; j++) {
@@ -91,7 +88,7 @@ void updateGame() {
   long deltaTime = millis() - gameTimeAnchor;
   long moveDeltaTime = millis() - moveAnchorTime;
 
-  if (moveDeltaTime > 750) {
+  if (moveDeltaTime > timePerFall) {
     moveAnchorTime = millis();
     moveY(-1);
   }
@@ -146,8 +143,9 @@ void drawHoldBlock() {
   }
 }
 
-
 void getNextBlock() {
+  placeBlockGracePeriod = true;
+  moveAnchorTime = millis();
   canHold = true;
   currentBlock = nextBlock;
   nextBlockIndex++;
@@ -168,15 +166,17 @@ void randomizeBag() {
 }
 
 void getHoldBlock() {
-  if (emptyHold) {
-    emptyHold = false;
-    holdBlock = currentBlock;
-    getNextBlock();
-  } else if (canHold) {
-    Tetromino tempBlock = currentBlock;
-    currentBlock = holdBlock;
-    holdBlock = tempBlock;
-    canHold = false;
+  if (canHold) {
+    if (emptyHold) {
+      emptyHold = false;
+      holdBlock = currentBlock;
+      getNextBlock();
+    } else {
+      Tetromino tempBlock = currentBlock;
+      currentBlock = holdBlock;
+      holdBlock = tempBlock;
+      canHold = false;
+    }
     currentX = startX;
     currentY = startY;
     currentRotation = 0;
@@ -230,7 +230,10 @@ void moveY(int deltaY) {
   if (checkCollision(currentX, tempY, currentRotation)) {
     currentY += deltaY;
   } else {
-    placeBlock();
+    if (!placeBlockGracePeriod) {
+      placeBlock();
+    }
+    placeBlockGracePeriod = false;
   }
 }
 
@@ -256,9 +259,13 @@ void rotateBlock(bool clockwise) {
 void placeBlock() {
   if (currentX == startX && currentY == startY) {
     clearDisplay();
+    Serial.print("Score: ");
+    Serial.print(score);
+    Serial.print("\tLines: ");
+    Serial.println(linesRemoved);
     changeGameState(2);
     return;
-  }  
+  }
 
   for (int rows = 0; rows < 4; rows++) {
     for (int cols = 0; cols < 4; cols++) {
@@ -330,6 +337,24 @@ void removeLines() {
       lineIndex++;
     }
   }
+
+  linesRemoved += numberOfLines;
+
+  switch (numberOfLines) {
+    case 1:
+    score += 100;
+    break;
+    case 2:
+    score += 300;
+    break;
+    case 3:
+    score += 500;
+    break;
+    case 4:
+    score += 800;
+    break;
+  }
+
   char displayTemp[8][14];
   for (int i = 0; i < lineIndex; i++) {
     for (int x = 0; x < 8; x++) {
@@ -372,11 +397,17 @@ void drawOutlineBlock() {
 
 int findLowestSpot() {
   int lowestY = currentY;
-
-  while (checkCollision(currentX, lowestY, currentRotation)) {
-    lowestY--;
+  if (!checkCollision(currentX, lowestY, currentRotation)) {
+    return lowestY;
+  } else {
+    while (checkCollision(currentX, lowestY, currentRotation)) {
+      lowestY--;
+    }
+    lowestY++;
+    return lowestY;
   }
-  lowestY++;
+}
 
-  return lowestY;
+void adjustFallSpeed() {
+  timePerFall = defaultFallTime - 50 * (linesRemoved%4);
 }

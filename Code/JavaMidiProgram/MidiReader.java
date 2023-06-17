@@ -1,5 +1,111 @@
-public class MidiReader {
-    public static void main(String[] args) {
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiEvent;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Track;
+
+public class MidiReader {
+    public static final int NOTE_ON = 0x90;
+    public static final int NOTE_OFF = 0x80;
+
+    public static void main(String[] args) throws InvalidMidiDataException, IOException {
+
+        String fileName;
+        String outputFileName;
+        Scanner scanner = new Scanner(System.in);
+        PrintWriter writer = null;
+        File midiFile = null;
+        File outputFile = null;
+        Sequence sequence = null;
+
+        int freq[][];
+        int time[][];
+
+        int pins[];
+        int trackLength[];
+
+        while (true) {
+            System.out.print("Input name of midi file: ");
+            fileName = scanner.nextLine();
+            try {
+                midiFile = new File("./Midi/" + fileName + ".mid");
+            } catch (Exception exception) {
+                System.out.println("Error Reading File: " + exception);
+                continue;
+            }
+            break;
+        }
+
+        System.out.print("Input Name Of Header File: ");
+        outputFileName = scanner.nextLine();
+        if (new File("./Headers/" + outputFileName + ".h").exists()) {
+            System.out.println(outputFileName + ".h already exists. Rewrite file? (y/n)");
+            if (!scanner.nextLine().equals("y")) {
+                System.exit(1);
+            }
+        }
+        outputFile = new File("./Headers/" + outputFileName + ".h");
+        try {
+            writer = new PrintWriter(outputFile);
+        } catch (Exception e) {
+            System.out.println("Printer Writer Failed");
+            e.printStackTrace();
+        }
+
+        sequence = MidiSystem.getSequence(midiFile);
+
+        int numberOfTracks = sequence.getTracks().length;
+        Track tracks[] = sequence.getTracks();
+        pins = new int[numberOfTracks];
+        trackLength = new int[numberOfTracks];
+
+        freq = new int[numberOfTracks][];
+        time = new int[numberOfTracks][];
+
+        int timePerTick = (int) ((sequence.getMicrosecondLength() * 1000.0) / (sequence.getTickLength()));
+
+        writer.println("#include \"MusicTrack.h\"");
+
+        for (int i = 0; i < numberOfTracks; i++) {
+            System.out.println("Buzzer Pin for track " + (i + 1));
+            pins[i] = scanner.nextInt();
+            trackLength[i] = tracks[i].size();
+            freq[i] = new int[trackLength[i]];
+            time[i] = new int[trackLength[i]];
+
+            for (int j = 0; j < trackLength[i]; j++) {
+                MidiEvent event = tracks[i].get(j);
+                ShortMessage message = new ShortMessage();
+                if (message.getCommand() == NOTE_ON) {
+                    freq[i][j] = 0;
+                } else if (message.getCommand() == NOTE_OFF) {
+                    freq[i][j] = (int) (Math.pow(2.0, (message.getData1() - 69) / 12.0)) * 440;
+                }
+                time[i][j] = (int) (event.getTick() * timePerTick);
+            }
+        }
+
+        for (int i = 0; i < numberOfTracks; i++) {
+            writer.print("int freq" + i + " = { ");
+            writer.print(freq[i][0]);
+            for (int j = 1; j < numberOfTracks; j++) {
+                writer.print(", " + freq[i][j]);
+            }
+            writer.println("};");
+            writer.print("int time" + i + " = { ");
+            writer.print(time[i][0]);
+            for (int j = 1; j < numberOfTracks; j++) {
+                writer.print(", " + time[i][j]);
+            }
+            writer.println("};");
+        }
+
+        writer.close();
     }
 }
