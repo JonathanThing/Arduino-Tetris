@@ -1,13 +1,14 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
+import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
-import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 public class MidiReader {
@@ -29,6 +30,8 @@ public class MidiReader {
 
         int pins[];
         int trackLength[];
+        int numberOfNotes[];
+        ;
 
         while (true) {
             System.out.print("Input name of midi file: ");
@@ -45,7 +48,7 @@ public class MidiReader {
         System.out.print("Input Name Of Header File: ");
         outputFileName = scanner.nextLine();
         if (new File("./Headers/" + outputFileName + ".h").exists()) {
-            System.out.println(outputFileName + ".h already exists. Rewrite file? (y/n)");
+            System.out.print(outputFileName + ".h already exists. Rewrite file? (y/n): ");
             if (!scanner.nextLine().equals("y")) {
                 System.exit(1);
             }
@@ -64,47 +67,69 @@ public class MidiReader {
         Track tracks[] = sequence.getTracks();
         pins = new int[numberOfTracks];
         trackLength = new int[numberOfTracks];
+        numberOfNotes = new int[numberOfTracks];
 
         freq = new int[numberOfTracks][];
         time = new int[numberOfTracks][];
 
-        int timePerTick = (int) ((sequence.getMicrosecondLength() * 1000.0) / (sequence.getTickLength()));
+        double timePerTick = (sequence.getMicrosecondLength() / 1000.0) / (sequence.getTickLength());
 
         writer.println("#include \"MusicTrack.h\"");
 
         for (int i = 0; i < numberOfTracks; i++) {
-            System.out.println("Buzzer Pin for track " + (i + 1));
+            System.out.print("Buzzer Pin for track " + (i + 1) + ": ");
             pins[i] = scanner.nextInt();
             trackLength[i] = tracks[i].size();
             freq[i] = new int[trackLength[i]];
             time[i] = new int[trackLength[i]];
-
             for (int j = 0; j < trackLength[i]; j++) {
                 MidiEvent event = tracks[i].get(j);
-                ShortMessage message = new ShortMessage();
-                if (message.getCommand() == NOTE_ON) {
+                MidiMessage message = event.getMessage();
+                int noteStatusByte = message.getMessage()[0] & 0xFF;
+                if (noteStatusByte == NOTE_OFF) {
                     freq[i][j] = 0;
-                } else if (message.getCommand() == NOTE_OFF) {
-                    freq[i][j] = (int) (Math.pow(2.0, (message.getData1() - 69) / 12.0)) * 440;
+                } else if (noteStatusByte == NOTE_ON) {
+                    int noteNumber = message.getMessage()[1] & 0xFF;
+                    freq[i][j] = (int) ((Math.pow(2.0, (noteNumber - 69.0) / 12.0)) * 440.0);
                 }
+
                 time[i][j] = (int) (event.getTick() * timePerTick);
             }
+
+            // Remove leading zeros in freq
+            for (int j = 0; j < trackLength[i]; j++) {
+                if (freq[i][j] != 0) {
+                    System.out.println(j);
+                    freq[i] = Arrays.copyOfRange(freq[i], j, trackLength[i]);
+                    time[i] = Arrays.copyOfRange(time[i], j, trackLength[i]);
+                    trackLength[i] -= j;
+                    break;
+                }
+            }
+
         }
 
         for (int i = 0; i < numberOfTracks; i++) {
-            writer.print("int freq" + i + " = { ");
+            writer.print("uint16_t freq" + i + " = { ");
             writer.print(freq[i][0]);
-            for (int j = 1; j < numberOfTracks; j++) {
+            for (int j = 1; j < trackLength[i]; j++) {
                 writer.print(", " + freq[i][j]);
             }
             writer.println("};");
-            writer.print("int time" + i + " = { ");
+            writer.print("uint32_t time" + i + " = { ");
             writer.print(time[i][0]);
-            for (int j = 1; j < numberOfTracks; j++) {
+            for (int j = 1; j < trackLength[i]; j++) {
                 writer.print(", " + time[i][j]);
             }
             writer.println("};");
         }
+
+        writer.println("MusicTrack tracks[]= {");
+        writer.print("{" + pins[0] + ", freq0, time0, " + trackLength[0] + "}");
+        for (int i = 1; i < numberOfTracks; i++) {
+            writer.print(",\n{" + pins[i] + ", freq" + i + ", time" + i + ", " + trackLength[i] + "}");
+        }
+        writer.print("\n};");
 
         writer.close();
     }

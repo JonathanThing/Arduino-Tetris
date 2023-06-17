@@ -3,8 +3,8 @@
 
 struct Track {
 byte pin;
-const int *freq;
-const int *time;
+const uint16_t *freq;
+const uint32_t *time;
 int trackLength;
 };
 
