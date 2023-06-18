@@ -74,8 +74,8 @@ void loop(){
 
   while(duration <= totalduration){ //if song should be playing
     duration = millis() - offset; //how long song has been playing
-    Serial.println(micros());
     for(int i = 0; i < TRACKS; i++){
+      Serial.println(millis());
       if(counter[i] < msize[i]){  //make sure we're within bounds of this track
 
         if(freq[i] > 0){

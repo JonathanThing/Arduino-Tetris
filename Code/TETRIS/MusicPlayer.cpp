@@ -11,6 +11,13 @@ void setupMusicPlayer() {
   }
 }
 
+void changeMusic(byte selection) {
+  if (selection == 0) { // Menu - Tetris Theme B
+
+  } else if (selection == 1) { // Game - Tetris Theme A
+
+  }
+}
 void updateMusicPlayer() {
   
 }

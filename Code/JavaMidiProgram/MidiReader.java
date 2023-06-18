@@ -30,8 +30,6 @@ public class MidiReader {
 
         int pins[];
         int trackLength[];
-        int numberOfNotes[];
-        ;
 
         while (true) {
             System.out.print("Input name of midi file: ");
@@ -67,7 +65,6 @@ public class MidiReader {
         Track tracks[] = sequence.getTracks();
         pins = new int[numberOfTracks];
         trackLength = new int[numberOfTracks];
-        numberOfNotes = new int[numberOfTracks];
 
         freq = new int[numberOfTracks][];
         time = new int[numberOfTracks][];
@@ -80,15 +77,16 @@ public class MidiReader {
             System.out.print("Buzzer Pin for track " + (i + 1) + ": ");
             pins[i] = scanner.nextInt();
             trackLength[i] = tracks[i].size();
+            System.out.println(trackLength[i]);
             freq[i] = new int[trackLength[i]];
             time[i] = new int[trackLength[i]];
             for (int j = 0; j < trackLength[i]; j++) {
                 MidiEvent event = tracks[i].get(j);
                 MidiMessage message = event.getMessage();
                 int noteStatusByte = message.getMessage()[0] & 0xFF;
-                if (noteStatusByte == NOTE_OFF) {
+                if (0x80 <= noteStatusByte && noteStatusByte < 0x90) {
                     freq[i][j] = 0;
-                } else if (noteStatusByte == NOTE_ON) {
+                } else if (0x90 <= noteStatusByte && noteStatusByte < 0xA0) {
                     int noteNumber = message.getMessage()[1] & 0xFF;
                     freq[i][j] = (int) ((Math.pow(2.0, (noteNumber - 69.0) / 12.0)) * 440.0);
                 }
@@ -99,7 +97,6 @@ public class MidiReader {
             // Remove leading zeros in freq
             for (int j = 0; j < trackLength[i]; j++) {
                 if (freq[i][j] != 0) {
-                    System.out.println(j);
                     freq[i] = Arrays.copyOfRange(freq[i], j, trackLength[i]);
                     time[i] = Arrays.copyOfRange(time[i], j, trackLength[i]);
                     trackLength[i] -= j;
@@ -110,13 +107,13 @@ public class MidiReader {
         }
 
         for (int i = 0; i < numberOfTracks; i++) {
-            writer.print("uint16_t freq" + i + " = { ");
+            writer.print("const uint16_t freq" + i + "[] = { ");
             writer.print(freq[i][0]);
             for (int j = 1; j < trackLength[i]; j++) {
                 writer.print(", " + freq[i][j]);
             }
             writer.println("};");
-            writer.print("uint32_t time" + i + " = { ");
+            writer.print("const uint32_t time" + i + "[] = { ");
             writer.print(time[i][0]);
             for (int j = 1; j < trackLength[i]; j++) {
                 writer.print(", " + time[i][j]);
@@ -124,7 +121,7 @@ public class MidiReader {
             writer.println("};");
         }
 
-        writer.println("MusicTrack tracks[]= {");
+        writer.println("MusicTrack tracks" + outputFileName + "[]= {");
         writer.print("{" + pins[0] + ", freq0, time0, " + trackLength[0] + "}");
         for (int i = 1; i < numberOfTracks; i++) {
             writer.print(",\n{" + pins[i] + ", freq" + i + ", time" + i + ", " + trackLength[i] + "}");

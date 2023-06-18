@@ -230,7 +230,7 @@ void moveY(int deltaY) {
   if (checkCollision(currentX, tempY, currentRotation)) {
     currentY += deltaY;
   } else {
-    if (!placeBlockGracePeriod) {
+    if (!placeBlockGracePeriod || (currentX == startX && currentY == startY)) {
       placeBlock();
     }
     placeBlockGracePeriod = false;
