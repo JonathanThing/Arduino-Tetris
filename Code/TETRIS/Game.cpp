@@ -339,6 +339,7 @@ void removeLines() {
   }
 
   linesRemoved += numberOfLines;
+  adjustFallSpeed();
 
   switch (numberOfLines) {
     case 1:
@@ -409,5 +410,5 @@ int findLowestSpot() {
 }
 
 void adjustFallSpeed() {
-  timePerFall = defaultFallTime - 50 * (linesRemoved%4);
+  timePerFall = defaultFallTime - 25 * (linesRemoved%8);
 }
