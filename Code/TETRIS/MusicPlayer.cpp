@@ -2,20 +2,22 @@
 
 const byte numberOfBuzzers = 4;
 const byte buzzerPins[numberOfBuzzers] = { 9, 8, 7, 6 };
-static Tone buzzers[numberOfBuzzers];
+Tone buzzers[numberOfBuzzers];
+
 MusicTrack *currentTracks;
-byte numberOfTracks;
 
 unsigned long startTime = 0;
-unsigned long musicLength = 0;
-long deltaSongTime = 0; 
+unsigned long musicLength = 0xFFFFFFFF;
+unsigned long deltaSongTime = 0;
+
+int currentFreq[NUMBER_OF_TRACKS];
+unsigned long currentTime[NUMBER_OF_TRACKS];
+int trackLengths[NUMBER_OF_TRACKS];
+
 void startMusic();
+void initMusic();
 
-uint16_t freq[]
-
-byte numberOfTracks = 4;
-
-byte noteIndexCounter[numberOfTracks]; // HARD CODED FIX LATER
+int noteIndexCounter[NUMBER_OF_TRACKS];
 
 void setupMusicPlayer() {
   for (int i = 0; i < numberOfBuzzers; i++) {
@@ -25,40 +27,64 @@ void setupMusicPlayer() {
 }
 
 void changeMusic(byte selection) {
-  if (selection == 0) { // Menu - Tetris Theme B
-    currentTracks = tracksTetrisMusic;
-  } else if (selection == 1) { // Game - Tetris Theme A
+  if (selection == 0) {  // Menu - Tetris Theme B
     currentTracks = tracksMenuMusic;
+  } else if (selection == 1) {  // Game - Tetris Theme A
+    currentTracks = tracksTetrisMusic;
   }
   initMusic();
   startMusic();
 }
 
-void initMusic() 
-  musicLength = currentTracks[0].time[currentTracks[0].trackLength-1];
-  for (int i = 1; i < numberOfTracks; i++) { // HARD CODED FIX LATER
-    unsigned long tempLength = currentTracks[i].time[currentTracks[i].trackLength-1]
+void initMusic() {
+  musicLength = 0xFFFFFFFF;
+  for (int i = 0; i < NUMBER_OF_TRACKS; i++) {
+    currentTime[i] = pgm_read_dword(&(currentTracks[i].time[0]));
+    if (currentTime[i] > 0) {
+      currentFreq[i] = 0;
+      Serial.println(i);
+    } else {
+      currentFreq[i] = pgm_read_word(&(currentTracks[i].freq[0]));
+    }
+    trackLengths[i] = currentTracks[i].trackLength;
+    unsigned long tempLength = pgm_read_dword(&(currentTracks[i].time[trackLengths[i] - 1]));
     if (musicLength > tempLength) {
       musicLength = tempLength;
     }
+    noteIndexCounter[i] = 0;
+    buzzers[i].stop();
   }
+  Serial.println(musicLength);
 }
 
 void startMusic() {
-  for (int i = 0; i < 4; i++) {
-    noteIndexCounter[i] = 0;
-  }
   startTime = millis();
 }
 
 void updateMusicPlayer() {
   deltaSongTime = millis() - startTime;
-
   if (deltaSongTime > musicLength) {
+    initMusic();
     startMusic();
   } else {
-    for (int i = 0; i < numberOfTracks; i++) {
-      if ()
+    for (int i = 0; i < NUMBER_OF_TRACKS; i++) {
+      if (noteIndexCounter[i] < trackLengths[i]) {
+        if (currentFreq[i] > 0) {
+          buzzers[i].play(currentFreq[i]);
+        } else {
+          buzzers[i].stop();
+        }
+
+        if (deltaSongTime >= currentTime[i]) {
+          noteIndexCounter[i]++;
+          if (noteIndexCounter[i] < trackLengths[i]) {
+            currentFreq[i] = pgm_read_word(&(currentTracks[i].freq[noteIndexCounter[i] - 1]));
+            currentTime[i] = pgm_read_dword(&(currentTracks[i].time[noteIndexCounter[i]]));
+          }
+        }
+      } else {
+        buzzers[i].stop();
+      }
     }
   }
 }

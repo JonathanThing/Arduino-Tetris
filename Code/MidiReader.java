@@ -88,7 +88,6 @@ public class MidiReader {
             System.out.print("Buzzer Pin for track " + (i + 1) + ": ");
             pins[i] = scanner.nextInt();
             trackLength[i] = tracks[i].size();
-            System.out.println(trackLength[i]);
             freq[i] = new int[trackLength[i]];
             time[i] = new int[trackLength[i]];
             for (int j = 0; j < trackLength[i]; j++) {

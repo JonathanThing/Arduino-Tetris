@@ -1,7 +1,6 @@
-#ifndef TetrisMusicH
-#define TetrisMusicH
+#ifndef TETRIS_MUSIC_H
+#define TETRIS_MUSIC_H
 #include "MusicTrack.h"
 #include "Arduino.h"
-#define NUMBER_OF_TRACKS 4
 extern MusicTrack tracksTetrisMusic[];
 #endif

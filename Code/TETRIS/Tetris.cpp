@@ -15,6 +15,8 @@ void setupTetris() {
   changeGameState(0);  // 0 Menu, 1 Game, 2 Lose
 }
 
+long anchorSongTime = 0;
+
 void updateTetris() { // Implement Tick rate
   readInputs();
   if (gameState == 0) {
@@ -24,7 +26,11 @@ void updateTetris() { // Implement Tick rate
   } else {
     updateLoseMenu();
   }
-  updateMusicPlayer();
+
+  if (millis() - anchorSongTime > 25) {
+    updateMusicPlayer();
+    anchorSongTime = millis();
+  }
 }
 
 void readInputs() {
@@ -38,11 +44,14 @@ void changeGameState(byte state) {
   if (state == 0) {
     initMenu();
     gameState = 0;
+    changeMusic(0);
   } else if (state == 1) {
     initGame(deltaTimeButton);
     gameState = 1;
+    changeMusic(1);
   } else {
     initLoseMenu();
+    changeMusic(0);
     gameState = 2;
   }
 }

@@ -1,7 +1,6 @@
-#ifndef MenuMusicH
-#define MenuMusicH
+#ifndef MENU_MUSIC_H
+#define MENU_MUSIC_H
 #include "MusicTrack.h"
 #include "Arduino.h"
-#define NUMBER_OF_TRACKS 4
 extern MusicTrack tracksMenuMusic[];
 #endif
