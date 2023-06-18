@@ -1,5 +1,6 @@
 #ifndef MUSICTRACK_H
 #define MUSICTRACK_H
+#include "Arduino.h"
 
 struct MusicTrack {
 byte pin;
