@@ -20,9 +20,11 @@ public class MidiReader {
         String fileName;
         String outputFileName;
         Scanner scanner = new Scanner(System.in);
-        PrintWriter writer = null;
+        PrintWriter cppWriter = null;
+        PrintWriter headerWriter = null;
         File midiFile = null;
-        File outputFile = null;
+        File outputCppFile = null;
+        File outputHeaderFile = null;
         Sequence sequence = null;
 
         int freq[][];
@@ -35,7 +37,7 @@ public class MidiReader {
             System.out.print("Input name of midi file: ");
             fileName = scanner.nextLine();
             try {
-                midiFile = new File("./Midi/" + fileName + ".mid");
+                midiFile = new File("./MidiFiles/" + fileName + ".mid");
             } catch (Exception exception) {
                 System.out.println("Error Reading File: " + exception);
                 continue;
@@ -45,15 +47,17 @@ public class MidiReader {
 
         System.out.print("Input Name Of Header File: ");
         outputFileName = scanner.nextLine();
-        if (new File("./Headers/" + outputFileName + ".h").exists()) {
+        if (new File("./TETRIS/" + outputFileName + ".h").exists()) {
             System.out.print(outputFileName + ".h already exists. Rewrite file? (y/n): ");
             if (!scanner.nextLine().equals("y")) {
                 System.exit(1);
             }
         }
-        outputFile = new File("./Headers/" + outputFileName + ".h");
+        outputHeaderFile = new File("./TETRIS/" + outputFileName + ".h");
+        outputCppFile = new File("./TETRIS/" + outputFileName + ".cpp");
         try {
-            writer = new PrintWriter(outputFile);
+            headerWriter = new PrintWriter(outputHeaderFile);
+            cppWriter = new PrintWriter(outputCppFile);
         } catch (Exception e) {
             System.out.println("Printer Writer Failed");
             e.printStackTrace();
@@ -71,7 +75,14 @@ public class MidiReader {
 
         double timePerTick = (sequence.getMicrosecondLength() / 1000.0) / (sequence.getTickLength());
 
-        writer.println("#include \"MusicTrack.h\"");
+        headerWriter.println("#ifndef " + outputFileName + "H");
+        headerWriter.println("#define " + outputFileName + "H");
+        headerWriter.println("#include \"MusicTrack.h\"");
+        headerWriter.println("#include \"Arduino.h\"");
+        headerWriter.println("#define NUMBER_OF_TRACKS " + numberOfTracks);
+        headerWriter.println("extern MusicTrack tracks" + outputFileName + "[];\n#endif");
+
+        cppWriter.println("#include \"MenuMusic.h\"");
 
         for (int i = 0; i < numberOfTracks; i++) {
             System.out.print("Buzzer Pin for track " + (i + 1) + ": ");
@@ -107,27 +118,28 @@ public class MidiReader {
         }
 
         for (int i = 0; i < numberOfTracks; i++) {
-            writer.print("const uint16_t freq" + i + "[] = { ");
-            writer.print(freq[i][0]);
+            cppWriter.print("const uint16_t freq" + i + "[] = { ");
+            cppWriter.print(freq[i][0]);
             for (int j = 1; j < trackLength[i]; j++) {
-                writer.print(", " + freq[i][j]);
+                cppWriter.print(", " + freq[i][j]);
             }
-            writer.println("};");
-            writer.print("const uint32_t time" + i + "[] = { ");
-            writer.print(time[i][0]);
+            cppWriter.println("};");
+            cppWriter.print("const uint32_t time" + i + "[] = { ");
+            cppWriter.print(time[i][0]);
             for (int j = 1; j < trackLength[i]; j++) {
-                writer.print(", " + time[i][j]);
+                cppWriter.print(", " + time[i][j]);
             }
-            writer.println("};");
+            cppWriter.println("};");
         }
 
-        writer.println("MusicTrack tracks" + outputFileName + "[]= {");
-        writer.print("{" + pins[0] + ", freq0, time0, " + trackLength[0] + "}");
+        cppWriter.println("MusicTrack tracks" + outputFileName + "[]= {");
+        cppWriter.print("{" + pins[0] + ", freq0, time0, " + trackLength[0] + "}");
         for (int i = 1; i < numberOfTracks; i++) {
-            writer.print(",\n{" + pins[i] + ", freq" + i + ", time" + i + ", " + trackLength[i] + "}");
+            cppWriter.print(",\n{" + pins[i] + ", freq" + i + ", time" + i + ", " + trackLength[i] + "}");
         }
-        writer.print("\n};");
+        cppWriter.print("\n};");
 
-        writer.close();
+        headerWriter.close();
+        cppWriter.close();
     }
 }

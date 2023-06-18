@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <Tone.h>
 #include "Tetris.h"
+#include "MusicTrack.h"
 #include "TetrisMusic.h"
 #include "MenuMusic.h"
 
