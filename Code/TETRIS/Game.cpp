@@ -80,7 +80,6 @@ void updateGame() {
   long fallDeltaTime = millis() - fallAnchorTime;
 
   if (fallDeltaTime > timePerFall) {
-    fallAnchorTime = millis();
     moveY(-1);
   }
   if (inputDeltaTime > 250) {
@@ -203,6 +202,7 @@ void moveY(int deltaY) {
     }
     placeBlockGracePeriod = false;
   }
+  fallAnchorTime = millis();
 }
 
 void rotateBlock(bool clockwise) {
