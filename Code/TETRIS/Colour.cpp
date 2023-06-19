@@ -8,13 +8,13 @@ const Colour GREEN = Colour(0, COLOUR_MAX_VALUE, 0);
 const Colour BLUE = Colour(0, 0, COLOUR_MAX_VALUE);
 const Colour WHITE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
 const Colour PURPLE = Colour(COLOUR_MAX_VALUE, 0, COLOUR_MAX_VALUE);
-const Colour YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE/4, 0);
-const Colour ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE/2, 0);
+const Colour YELLOW = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 4, 0);
+const Colour ORANGE = Colour(COLOUR_MAX_VALUE, COLOUR_MAX_VALUE / 2, 0);
 const Colour CYAN = Colour(0, COLOUR_MAX_VALUE, COLOUR_MAX_VALUE);
 const Colour BLACK = Colour(0, 0, 0);
 const Colour GREY = Colour(1, 1, 1);
 
-const Colour ALL_COLOURS[9] = {RED, ORANGE, YELLOW, GREEN, BLUE, CYAN, PURPLE, WHITE, BLACK};
+const Colour ALL_COLOURS[9] = { RED, ORANGE, YELLOW, GREEN, BLUE, CYAN, PURPLE, WHITE, BLACK };
 
 Colour::Colour() {
   red = 0;
@@ -23,38 +23,6 @@ Colour::Colour() {
 }
 
 Colour::Colour(byte red, byte green, byte blue) {
-  this->red = red;
-  this->green = green;
-  this->blue = blue;
-}
-
-// Getter
-byte Colour::getRed() {
-  return red;
-}
-
-byte Colour::getGreen() {
-  return green;
-}
-
-byte Colour::getBlue() {
-  return blue;
-}
-
-// Setter
-void Colour::setRed(byte red) {
-  this->red = red;
-}
-
-void Colour::setGreen(byte green) {
-  this->green = green;
-}
-
-void Colour::setBlue(byte blue) {
-  this->blue = blue;
-}
-
-void Colour::setColour(byte red, byte green, byte blue) {
   this->red = red;
   this->green = green;
   this->blue = blue;
@@ -108,7 +76,8 @@ void Colour::changeColour(int redDelta, int greenDelta, int blueDelta) {
   }
 }
 
-byte Colour::getColour(byte selection) {
+// Get Colour Value (0 = R, 1 = G, 2 = B)
+byte Colour::getColourValue(byte selection) {
   if (selection == 0) {
     return red;
   } else if (selection == 1) {
@@ -127,4 +96,3 @@ void Colour::printOut() {
   Serial.print(blue);
   Serial.print(")");
 }
-

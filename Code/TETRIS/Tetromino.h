@@ -9,7 +9,6 @@ struct Tetromino {
   int *tiles;
   Tetromino();
   Tetromino(Colour *colour, int *tiles, char symbol);
-  void printRotation(byte rotation);
 };
 
 extern const Tetromino L_BLOCK;

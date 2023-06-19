@@ -1,10 +1,14 @@
 #include "Tetromino.h"
 
-/*
+/* 
+Integer Representation of Tetrominos: 
+
 0123
 4567
 89AB
 CDEF
+
+MSB FEDCBA9876543210 LSB
 */
 
 const int I_BLOCK_TILES[4] = { 0b0000000011110000, 0b0100010001000100, 0b0000111100000000, 0b0010001000100010 };
@@ -65,7 +69,6 @@ const Tetromino J_BLOCK = { &ORANGE, L_BLOCK_TILES, 'J' };
 const Tetromino S_BLOCK = { &RED, S_BLOCK_TILES, 'S' };
 const Tetromino Z_BLOCK = { &GREEN, Z_BLOCK_TILES, 'Z' };
 
-
 const Tetromino blocks[7] = { I_BLOCK, O_BLOCK, T_BLOCK, J_BLOCK, L_BLOCK, S_BLOCK, Z_BLOCK };
 
 Tetromino::Tetromino() {
@@ -75,8 +78,4 @@ Tetromino::Tetromino(Colour *colour, int *tiles, char symbol) {
   this->colour = colour;
   this->tiles = tiles;
   this->symbol = symbol;
-}
-
-void Tetromino::printRotation(byte rotation) {
-  Serial.print(tiles[rotation], 2);
 }

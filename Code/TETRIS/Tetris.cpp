@@ -6,6 +6,7 @@ const byte buttonPins[numberOfButtons] = { 19, 3, 18, 15, 16, 17, 2 };
 byte gameState;
 Colour *display[16][8];
 byte inputs = 0;
+long anchorSongTime = 0;
 
 void setupTetris() {
   for (int i = 0; i < 7; i++) {
@@ -15,9 +16,7 @@ void setupTetris() {
   changeGameState(0);  // 0 Menu, 1 Game, 2 Lose
 }
 
-long anchorSongTime = 0;
-
-void updateTetris() { // Implement Tick rate
+void updateTetris() { 
   readInputs();
   if (gameState == 0) {
     updateMenu();
@@ -27,7 +26,7 @@ void updateTetris() { // Implement Tick rate
     updateLoseMenu();
   }
 
-  if (millis() - anchorSongTime > 25) {
+  if (millis() - anchorSongTime > 25) { // Update the music every 25ms
     updateMusicPlayer();
     anchorSongTime = millis();
   }
@@ -51,8 +50,8 @@ void changeGameState(byte state) {
     changeMusic(1);
   } else {
     initLoseMenu();
-    changeMusic(0);
     gameState = 2;
+    changeMusic(0);
   }
 }
 

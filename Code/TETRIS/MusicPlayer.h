@@ -7,10 +7,8 @@
 #include "TetrisMusic.h"
 #include "MenuMusic.h"
 
-
 void setupMusicPlayer();
 void changeMusic(byte selection);
 void updateMusicPlayer();
-
 
 #endif

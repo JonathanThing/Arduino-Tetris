@@ -4,7 +4,6 @@
 #include "Colour.h"
 #include "Tetris.h"
 
-
 void setupRGBMatrix();
 void drawDisplay();
 

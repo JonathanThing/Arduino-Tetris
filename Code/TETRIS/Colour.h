@@ -11,19 +11,12 @@ struct Colour {
 
   Colour();
   Colour(byte red, byte green, byte blue);
-  byte getRed();
-  byte getGreen();
-  byte getBlue();
-  void setRed(byte red);
-  void setGreen(byte green);
-  void setBlue(byte blue);
-  void setColour(byte red, byte green, byte blue);
   void printOut();
   void changeRed(int delta);
   void changeGreen(int delta);
   void changeBlue(int delta);
   void changeColour(int redDelta, int greenDelta, int blueDelta);
-  byte getColour(byte selection);
+  byte getColourValue(byte selection);
 };
 
 extern const Colour RED;

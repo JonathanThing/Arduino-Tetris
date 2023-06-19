@@ -1,6 +1,6 @@
 #include "RGBMatrix.h"
 
-#define MAX_INT 65535
+#define MAX_INT 0xFFFF
 #define dataPin 40
 #define shiftClockPin 4
 #define storageClockPin 5
@@ -83,13 +83,13 @@ void drawRow() {
     for (int i = 0; i < COLOUR_MAX_VALUE; i++) {  // Resolution
       int bitMask = 0;
       for (int j = 0; j < 16; j++) {
-        bitMask |= (display[j][currentRow]->getColour(colour) >= (i + 1));
+        bitMask |= (display[j][currentRow]->getColourValue(colour) >= (i + 1));
         if (j != 15) {
           bitMask <<= 1;
         }
       }
       writeColour(colour, ~bitMask);
-      if(colour == 0) {
+      if (colour == 0) {
         delayMicroseconds(25);
       }
     }

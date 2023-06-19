@@ -3,10 +3,10 @@
 #include "Arduino.h"
 
 struct MusicTrack {
-byte pin;
-const uint16_t *freq;
-const uint32_t *time;
-int trackLength;
+  byte pin;
+  const uint16_t *freq;
+  const uint32_t *time;
+  int trackLength;
 };
 
 #endif
