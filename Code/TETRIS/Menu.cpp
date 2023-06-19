@@ -1,7 +1,7 @@
 #include "Menu.h"
 
 long deltaTimeButton = 0;
-long menuAnchor = 0;
+long menuAnchorTime = 0;
 
 void menuDisplay();
 void loseDisplay();
@@ -9,13 +9,13 @@ void loseDisplay();
 void initMenu() {
   deltaTimeButton = 0;
   menuDisplay();
-  menuAnchor = millis();
+  menuAnchorTime = millis();
 }
 
 void initLoseMenu() {
   deltaTimeButton = 0;
   loseDisplay();
-  menuAnchor = millis();
+  menuAnchorTime = millis();
 }
 
 void updateMenu() {
@@ -23,7 +23,7 @@ void updateMenu() {
 }
 
 void updateLoseMenu() {
-  if (millis() - menuAnchor > 250) { // Delay before game starts reading input
+  if (millis() - menuAnchorTime > 250) {  // Delay before game starts reading input
     handleMenuInput();
   }
 }
