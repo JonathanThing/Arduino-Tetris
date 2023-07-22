@@ -1,7 +1,7 @@
 # Arduino-Tetris
 Tetris on an Arduino Mega
 
-Video Demo:
+Video Demo: \n
 [![Arduino Tetris Demo](https://img.youtube.com/vi/_YhfdDc1tRE/0.jpg)](https://www.youtube.com/watch?v=_YhfdDc1tRE)
 
 This was my Gr.12 Computer Engineering Final project where I designed, created, and programmed Tetris from start to finish.
